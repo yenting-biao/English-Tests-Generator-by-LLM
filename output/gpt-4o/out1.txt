@@ -1,0 +1,39 @@
+Passage:
+Many contemporary scholars emphasize the importance of integrating ethics into business practices. Rather than viewing corporations merely as profit-making entities, these scholars argue that businesses also have a responsibility to their employees, communities, and environments. Ethical business practices can promote trust, enhance a company's reputation, and contribute to long-term success while avoiding potential legal and financial repercussions from unethical behavior. 
+
+However, implementing ethical practices is not without its challenges. One of the primary difficulties is the potential conflict between profitability and ethical behavior. Companies may find themselves in a situation where the most profitable option is not the most ethical. For example, cutting corners on environmental regulations can reduce costs in the short term but can lead to significant harm and long-term costs. Another challenge is ensuring that ethical standards are consistently applied across all levels of an organization. Even if top executives are committed to ethical practices, those values must be effectively communicated and enforced within every department and at every level of the company.
+
+Several strategies can be employed to foster an ethical business culture. Firstly, clear and comprehensive codes of ethics should be established, setting out the company's values and expectations for employee behavior. Additionally, regular training sessions on ethical decision-making can help employees understand and navigate complex moral dilemmas. Finally, creating a safe and anonymous channel for reporting unethical behavior can ensure that employees feel confident that they will not suffer retaliation for speaking out against wrongdoing.
+
+Overall, while the pursuit of ethical business practices can be demanding, the potential benefits, ranging from increased consumer trust to long-term sustainability, make it a crucial aspect of modern business strategy.
+
+Questions:
+1. What is the main idea of the passage?
+(A) Many companies today prioritize profitability over ethics.
+(B) Ethical business practices can lead to long-term success and trust.
+(C) Employees often face ethical dilemmas in the workplace.
+(D) Environmental regulations are often ignored by businesses.
+
+2. Which of the following is mentioned as one of the challenges of applying ethical standards?
+(A) Lack of legal frameworks.
+(B) High costs involved in establishing ethics codes.
+(C) Ensuring consistent application across all levels.
+(D) Limited benefits in the short term.
+
+3. What can be inferred about the relationship between ethics and profitability?
+(A) Ethical behavior always leads to higher profits.
+(B) Short-term profits can sometimes come at the cost of ethical behavior.
+(C) Businesses prioritize ethics only when it is profitable.
+(D) There is generally no conflict between ethics and profitability.
+
+4. What does the word "retaliation" in paragraph 3 most likely mean?
+(A) Reward.
+(B) Reprisal.
+(C) Cooperation.
+(D) Negligence.
+
+Answers:
+1. (B) Ethical business practices can lead to long-term success and trust.
+2. (C) Ensuring consistent application across all levels.
+3. (B) Short-term profits can sometimes come at the cost of ethical behavior.
+4. (B) Reprisal.
