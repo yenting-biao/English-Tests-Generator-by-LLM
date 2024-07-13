@@ -1,0 +1,39 @@
+Passage:
+In the field of educational psychology, considerable attention has been given to understanding the different ways in which people learn. Notably, Howard Gardner's theory of multiple intelligences has sparked discussions and debates since its introduction in 1983. Gardner proposed that the traditional notion of intelligence, often quantified by IQ tests, was too limited. Instead, he suggested that there are multiple forms of intelligence, each representing different ways of processing information and solving problems.
+
+Gardner initially identified seven types of intelligence: linguistic, logical-mathematical, spatial, musical, bodily-kinesthetic, interpersonal, and intrapersonal. Later, he added an eighth, naturalistic intelligence, and has since discussed the possibility of a ninth, existential intelligence. These intelligences, Gardner argued, are not mutually exclusive; an individual can possess and develop multiple intelligences simultaneously, but usually, some forms are more pronounced than others.
+
+Gardner's theory has profound implications for educational practices. It suggests that a one-size-fits-all approach to education is fundamentally flawed. Instead, teaching methods should be diversified to cater to different types of intelligences. For instance, a student strong in spatial intelligence would benefit from visual aids and diagrams, whereas one with robust linguistic intelligence might excel through reading and writing activities.
+
+However, Gardner's theory has also faced criticism. Some scholars argue that what he calls "intelligences" are better understood as talents or skills rather than separate forms of intelligence. Others contend that empirical support for the theory is lacking, making it more of a philosophical framework than a scientifically validated concept. Despite these criticisms, Gardner's theory remains influential, encouraging educators to recognize and nurture a broader spectrum of human capabilities.
+
+Questions:
+1. What is the main idea of the passage?
+(A) Howard Gardner's theory of multiple intelligences challenges traditional notions of intelligence and has significant implications for education.
+(B) Gardner's theory of multiple intelligences is universally accepted without criticism.
+(C) Traditional IQ tests are the best way to measure a person's intelligence.
+(D) Gardner's theory of multiple intelligences focuses mainly on linguistic and logical-mathematical skills.
+
+2. According to the passage, which of Gardner's identified intelligences was added later?
+(A) Intrapersonal intelligence 
+(B) Linguistic intelligence 
+(C) Naturalistic intelligence 
+(D) Interpersonal intelligence
+
+3. Based on the passage, how might a student with strong spatial intelligence best learn?
+(A) Through reading and writing activities
+(B) Through logical reasoning exercises
+(C) Through the use of visual aids and diagrams
+(D) Through physical movement and hands-on activities
+
+4. What does the word "diversified" in the third paragraph most likely mean?
+(A) Simplified 
+(B) Varied 
+(C) Limited 
+(D) Restricted 
+
+Answers:
+1. (A) Howard Gardner's theory of multiple intelligences challenges traditional notions of intelligence and has significant implications for education.
+2. (C) Naturalistic intelligence
+3. (C) Through the use of visual aids and diagrams
+4. (B) Varied

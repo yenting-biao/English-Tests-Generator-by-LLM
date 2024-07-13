@@ -1,0 +1,39 @@
+Passage:
+In the late 19th and early 20th centuries, the advent of electrification revolutionized society in numerous ways, ultimately transforming every aspect of daily life. One of the most significant impacts of electrification was on domestic life. Before the widespread adoption of electrical appliances, households relied on manual labor for tasks such as washing clothes, cooking, and lighting. The introduction of electric stoves, washing machines, and electric lighting greatly reduced the physical burden of everyday chores, allowing more leisure and productivity for household members.
+
+Furthermore, electrification played a crucial role in the industrial sector. Factories that transitioned to electric power experienced substantial increases in efficiency and productivity. Electric motors replaced steam engines, allowing for more precise control and less downtime for maintenance. This surge in industrial capability facilitated mass production, which in turn led to the availability of more affordable goods for the general public, thereby improving the standard of living.
+
+The transportation sector also benefited immensely from the electrification movement. Electric streetcars and subways provided reliable and efficient means of urban transport, reshaping city landscapes by enabling urban sprawl and the development of suburbs. This new mode of transport not only provided a comfortable and reliable commute for many urban residents but also played a role in decreasing the pollution levels in cities that were previously dominated by horse-drawn carriages and coal-powered trains.
+
+Lastly, electrification had a monumental influence on communication. The advent of the telegraph and, later, the telephone completely altered the way information was exchanged. Messages that once took days or even weeks to deliver could now be transmitted almost instantaneously across great distances. This rapid advancement in communication technology not only connected individuals and businesses more efficiently but also had a profound impact on social interactions and global commerce.
+
+Questions:
+1. According to the passage, what was one of the significant impacts of electrification on domestic life?
+(A) Increasing the demand for manual labor.
+(B) Making household chores more time-consuming.
+(C) Reducing the physical burden of daily tasks.
+(D) Encouraging the use of steam engines in households.
+
+2. Which of the following is a non-factual statement about the impact of electrification?
+(A) Electric motors replaced steam engines in factories.
+(B) Electrics stoves were invented to reduce manual labor.
+(C) Electrification did not affect the communication sector.
+(D) Electric streetcars helped in the development of suburbs.
+
+3. What can be inferred from the passage about the transportation sector before electrification?
+(A) Urban transport was nonexistent before electric streetcars.
+(B) Pollution levels were lower in cities before electrification.
+(C) Urban transport was predominantly reliant on horse-drawn carriages and coal.
+(D) There was no demand for reliable urban transport before the advent of electrification.
+
+4. What is the meaning of the word "facilitated" as used in the passage?
+(A) Complicated.
+(B) Enabled.
+(C) Hindered.
+(D) Destroyed.
+
+Answers:
+1. (C) Reducing the physical burden of daily tasks.
+2. (C) Electrification did not affect the communication sector.
+3. (C) Urban transport was predominantly reliant on horse-drawn carriages and coal.
+4. (B) Enabled.

@@ -1,0 +1,38 @@
+Passage:
+
+The widespread adoption of electric vehicles (EVs) marks a pivotal shift in the automotive industry, impacting not just transportation but also environmental policies and economic models worldwide. For decades, the internal combustion engine (ICE) reigned supreme, but growing concerns over climate change, urban air quality, and fossil fuel dependency have pushed societies toward greener alternatives. EVs, powered by electricity from renewable resources such as solar and wind, present an opportunity to significantly reduce greenhouse gas emissions and other pollutants. 
+
+Early models of electric vehicles faced numerous challenges, including limited battery life, long charging times, and a scarcity of charging infrastructure. However, recent advances in battery technology have led to the development of lithium-ion batteries with greater energy density and faster charging capabilities. Nowadays, a vast network of charging stations exists, and superchargers can replenish a vehicle's battery to 80% in under 30 minutes. These innovations have catalyzed higher consumer adoption rates, fueled further by government incentives and stringent emissions regulations.
+
+Despite their environmental benefits, electric vehicles are not without criticism. The production of lithium-ion batteries involves mining for materials like lithium and cobalt, which has been linked to environmental degradation and human rights issues in several countries. Moreover, the electricity used to charge EVs often comes from non-renewable sources, such as coal or natural gas, thereby mitigating some of their environmental advantages. Thus, efforts are being made to develop more sustainable battery technologies and to power the electrical grid with renewables.
+
+The transition to electric vehicles is a complex and multifaceted process, encompassing not only technological advancements but also shifts in consumer behavior, regulatory frameworks, and economic structures. While challenges remain, the progress made thus far suggests that electric vehicles are poised to play a central role in a more sustainable future.
+
+Questions:
+
+1. What is the main idea of the passage?
+(A) The global automotive industry is transitioning to electric vehicles, posing both opportunities and challenges.
+(B) Government incentives are the most crucial factor in the adoption of electric vehicles.
+(C) Electric vehicles are entirely free from environmental and ethical issues.
+(D) Internal combustion engines are the best option for the foreseeable future.
+
+2. Which of the following facts is NOT mentioned as a challenge faced by early models of electric vehicles?
+(A) Limited battery life. (B) Long charging times.
+(C) High purchase cost. (D) Scarcity of charging infrastructure.
+
+3. What can be inferred from the passage about the current adoption rates of electric vehicles?
+(A) Adoption rates have declined due to economic downturns.
+(B) Higher adoption rates are partly due to advancements in battery technology and government incentives.
+(C) Consumers prefer internal combustion engines over electric vehicles.
+(D) Adoption rates are primarily driven by aesthetic preferences.
+
+4. In the context of the passage, what does the word "mitigating" mean in the sentence “Moreover, the electricity used to charge EVs often comes from non-renewable sources, such as coal or natural gas, thereby mitigating some of their environmental advantages”?
+(A) Reducing. (B) Enhancing.
+(C) Ignoring. (D) Supporting.
+
+Answers:
+
+1. (A) The global automotive industry is transitioning to electric vehicles, posing both opportunities and challenges.
+2. (C) High purchase cost.
+3. (B) Higher adoption rates are partly due to advancements in battery technology and government incentives.
+4. (A) Reducing.

@@ -1,0 +1,39 @@
+Passage:
+Plastic pollution is one of the most pressing environmental issues faced by modern societies. Plastic waste, when mishandled, often ends up in oceans, rivers, and other natural habitats, causing significant harm to marine life and ecosystems. The problem stems from plastic's durability; it takes hundreds of years to decompose, leading to the accumulation of plastic waste over time. Moreover, plastics break down into microplastics, tiny particles less than 5 millimeters in size, which are ingested by marine animals and even enter the human food chain, posing potential health risks.
+
+Efforts to combat plastic pollution are multifaceted. On one side, governments and environmental organizations are working to raise awareness and implement policies that reduce single-use plastics. Bans on plastic bags, straws, and utensils, along with incentives for using biodegradable alternatives, are steps in this direction. Furthermore, recycling programs are being enhanced to improve the efficiency and scope of plastic waste management.
+
+Technology also plays a crucial role in addressing plastic pollution. Innovations in materials science are leading to the development of biodegradable plastics and advanced recycling techniques. For example, researchers are exploring the use of enzymes and bacteria to break down plastics more efficiently. Additionally, ocean clean-up initiatives use advanced technology, such as autonomous drones and filtration systems, to remove plastic waste from water bodies.
+
+Despite these measures, the fight against plastic pollution faces significant challenges. The scale of plastic production continues to rise globally, driven by its cost-effectiveness and versatility. Moreover, the global nature of the problem requires international cooperation, which can often be hindered by economic and political barriers. Thus, while progress is being made, a sustained and collective effort is essential to significantly mitigate the impact of plastic pollution on our planet.
+
+Questions:
+1. What is the main idea of the passage?
+(A) The harms of plastic pollution on human health.
+(B) The efforts and challenges in combating plastic pollution.
+(C) The technological advancements in recycling plastics.
+(D) The global production rise in plastic materials.
+
+2. Which of the following is mentioned as an effort to combat plastic pollution?
+(A) Reducing plastic production globally.
+(B) Using enzymes to enhance plastic strength.
+(C) Raising awareness about recycling programs.
+(D) Encouraging the use of cleaner fossil fuels.
+
+3. What can be inferred about the role of technology in addressing plastic pollution?
+(A) It has completely solved the problem of plastic pollution.
+(B) It is only in the theoretical stages without practical applications.
+(C) It plays an important part but is not a standalone solution.
+(D) It focuses mainly on developing new types of plastics.
+
+4. What does the word "multifaceted" most likely mean in the context of the passage?
+(A) Limited in scope.
+(B) Complex and varied.
+(C) Focused and direct.
+(D) Ineffective without global support.
+
+Answers:
+1. (B) The efforts and challenges in combating plastic pollution.
+2. (C) Raising awareness about recycling programs.
+3. (C) It plays an important part but is not a standalone solution.
+4. (B) Complex and varied.
