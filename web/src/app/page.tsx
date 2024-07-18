@@ -1,7 +1,9 @@
 "use client";
 
 import { GenQAForm } from "@/components/GenQAForm";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Check, Copy } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -42,7 +44,49 @@ export default function Home() {
           {result}
           <div ref={resultEndRef} />
         </div>
+        <CopyButton result={result} streaming={streaming} />
       </div>
     </>
+  );
+}
+
+function CopyButton({
+  result,
+  streaming,
+}: {
+  result: string;
+  streaming: boolean;
+}) {
+  const [justCopied, setJustCopied] = useState<boolean>(false);
+  useEffect(() => {
+    if (justCopied) {
+      const timeout = setTimeout(() => {
+        setJustCopied(false);
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [justCopied]);
+
+  return (
+    <Button
+      className="w-fit mt-5"
+      onClick={() => {
+        setJustCopied(true);
+        navigator.clipboard.writeText(result);
+      }}
+      disabled={justCopied || streaming}
+    >
+      {streaming ? (
+        "Generating..."
+      ) : justCopied ? (
+        <>
+          <Check size={16} className="mr-2" /> Copied
+        </>
+      ) : (
+        <>
+          <Copy size={16} className="mr-2" /> Copy
+        </>
+      )}
+    </Button>
   );
 }
