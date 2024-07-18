@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const fontSans = Fontsans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Reading Comprehension Problems Generator",
+  title: "Reading Comprehension Questions Generator",
   description:
     "Generate reading comprehension problems for your students by Large Language Models.",
 };
@@ -32,7 +32,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
+          {/* <Header /> */}
           {children}
         </ThemeProvider>
       </body>
