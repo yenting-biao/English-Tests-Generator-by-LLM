@@ -1,0 +1,39 @@
+Passage:
+The concept of the biosphere, the regions inhabited by life, is of fundamental significance in understanding Earth's ecology. Coined by geologist Eduard Suess in the late 19th century, "biosphere" refers to the domain of our planet that supports life, including the cycle of matter and transfer of energy among organisms. The biosphere encompasses diverse ecosystems, from the deepest oceanic trenches to the highest mountaintops, as well as thick forests and arid deserts.
+
+One of the intriguing aspects of the biosphere is its intricate interactions and dependencies. For instance, plants, via photosynthesis, convert carbon dioxide and sunlight into oxygen and glucose, which are essential for the respiration of animals and other organisms. Similarly, the decomposition of organic matter by microorganisms recycles vital nutrients back into the soil, facilitating the growth of new plants. Hence, the interdependence of species and natural processes forms a network that sustains life on Earth.
+
+Moreover, the carbon cycle, a crucial component of the biosphere, illustrates the flow of carbon among various reservoirs, including the atmosphere, hydrosphere, lithosphere, and biosphere. Human activities, especially the combustion of fossil fuels and deforestation, have significantly altered this cycle, leading to an increase in atmospheric carbon dioxide. These changes have contributed to global warming—a phenomenon causing shifts in climate patterns and posing a threat to many ecosystems.
+
+The biosphere also plays a pivotal role in regulating Earth's climate. Forests, wetlands, and oceans act as carbon sinks, absorbing more carbon dioxide than they release, thereby mitigating the greenhouse effect. Furthermore, the albedo effect, where certain surfaces like ice and snow reflect sunlight, helps to cool the planet. However, with the current rate of climate change, these natural processes are being disrupted, resulting in more pronounced and frequent ecological imbalances.
+
+Question:
+1. Which of the following best describes the main idea of the passage?
+(A) Human activities have little impact on the biosphere.
+(B) The biosphere is an interconnected system vital for life on Earth.
+(C) The concept of the biosphere was only recently explored.
+(D) Natural processes in the biosphere are independent of each other.
+
+2. According to the passage, what is one way humans have altered the carbon cycle?
+(A) By promoting plant photosynthesis.
+(B) By increasing carbon dioxide through fossil fuel usage.
+(C) By recycling nutrients into the soil.
+(D) By converting glucose into oxygen.
+
+3. What does the author imply about the role of forests, wetlands, and oceans?
+(A) They are the primary producers of oxygen.
+(B) They contribute to the greenhouse effect.
+(C) They act as natural carbon storage systems.
+(D) They primarily affect the albedo effect.
+
+4. What does the term "albedo effect" most nearly mean as used in the passage?
+(A) The absorption of sunlight by forests.
+(B) The reflection of sunlight by icy surfaces.
+(C) The increase of atmospheric carbon dioxide.
+(D) The decomposition of organic matter by microorganisms.
+
+Answers:
+1. (B)
+2. (B)
+3. (C)
+4. (B)
