@@ -3,6 +3,7 @@ import { Inter as Fontsans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { BookCheck } from "lucide-react";
 
 const fontSans = Fontsans({ subsets: ["latin"], variable: "--font-sans" });
 

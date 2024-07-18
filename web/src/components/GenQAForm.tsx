@@ -23,66 +23,25 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { genQASchema as formSchema } from "@/lib/validators/genQA";
+import React from "react";
 
-const formSchema = z.object({
-  difficulty: z
-    .number()
-    .int()
-    .min(1, {
-      message: "Difficulty must be at least 1.",
-    })
-    .max(5, {
-      message: "Difficulty must be at most 5.",
-    }),
-  passageLength: z
-    .number()
-    .int()
-    .min(100, {
-      message: "Length must be at least 100.",
-    })
-    .max(1000, {
-      message: "Length must be at most 1000.",
-    }),
-  topic: z
-    .string()
-    .max(50, {
-      message: "Topic must be at most 50 characters.",
-    })
-    .optional(),
-  numQuestions: z
-    .number()
-    .int()
-    .min(1, {
-      message: "Number of questions must be at least 1.",
-    })
-    .max(10, {
-      message: "Number of questions must be at most 10.",
-    }),
-  numOptions: z
-    .number()
-    .int()
-    .min(3, {
-      message: "Number of options must be at least 2.",
-    })
-    .max(5, {
-      message: "Number of options must be at most 5.",
-    }),
-  examples: z
-    .string()
-    .min(50, {
-      message: "The examples you provided are too short.",
-    })
-    .max(10000, {
-      message: "The examples you provided are too long.",
-    }),
-});
-
-export function GenQAForm() {
+export function GenQAForm({
+  setResult,
+  streaming,
+  setStreaming,
+  resultRef,
+}: {
+  setResult: React.Dispatch<React.SetStateAction<string>>;
+  streaming: boolean;
+  setStreaming: React.Dispatch<React.SetStateAction<boolean>>;
+  resultRef: React.MutableRefObject<HTMLDivElement | null>;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      difficulty: 3,
+      difficulty: 4,
       passageLength: 300,
       topic: "",
       numQuestions: 4,
@@ -91,15 +50,50 @@ export function GenQAForm() {
     },
   });
 
-  const router = useRouter();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    // The form values are type-safe and validated.
+    setStreaming(true);
+    setResult("");
+    resultRef.current?.scrollIntoView({
+      behavior: "auto",
+      block: "start",
+      inline: "nearest",
+    });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      if (!res.ok || !res.body) {
+        alert("Failed to generate questions. Please try again.");
+        throw new Error("Failed to generate questions.");
+      }
 
-    router.push("/results");
-  }
+      const reader = res.body.getReader();
+      let count = 0;
+      let result = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
+        }
+        result += new TextDecoder().decode(value);
+        setResult(result);
+        count++;
+        if (count > 2048) {
+          break;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setStreaming(false);
+    }
+  };
   return (
     <Form {...form}>
       <form
@@ -116,7 +110,11 @@ export function GenQAForm() {
         <div className="md:col-span-2">
           <ExamplesField form={form} />
         </div>
-        <Button type="submit" className="w-fit md:col-span-2">
+        <Button
+          type="submit"
+          className="w-fit md:col-span-2 disabled:cursor-not-allowed"
+          disabled={streaming}
+        >
           Generate!
         </Button>
       </form>
@@ -129,6 +127,7 @@ function DifficultyField({
 }: {
   form: UseFormReturn<z.infer<typeof formSchema>>;
 }) {
+  const CEFR = ["A1", "A2", "B1", "B2", "C1", "C2"];
   return (
     <FormField
       control={form.control}
@@ -146,9 +145,9 @@ function DifficultyField({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {Array.from({ length: 5 }, (_, i) => (
+              {Array.from({ length: 6 }, (_, i) => (
                 <SelectItem key={i} value={(i + 1).toString()}>
-                  {i + 1}
+                  CEFR {CEFR[i]}
                 </SelectItem>
               ))}
             </SelectContent>
