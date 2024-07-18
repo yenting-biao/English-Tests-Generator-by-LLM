@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter as Fontsans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const fontSans = Fontsans({ subsets: ["latin"], variable: "--font-sans" });
@@ -22,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased flex flex-col",
+          "min-h-screen bg-background font-sans antialiased flex flex-col items-center p-8",
           fontSans.variable
         )}
       >
@@ -32,7 +31,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <Header /> */}
+          <h3 className="scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight mb-10">
+            Reading Comprehension Questions Generator
+          </h3>
           {children}
         </ThemeProvider>
       </body>

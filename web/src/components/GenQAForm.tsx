@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { redirect, useRouter } from "next/navigation";
 
 const formSchema = z.object({
   difficulty: z
@@ -90,10 +91,14 @@ export function GenQAForm() {
     },
   });
 
+  const router = useRouter();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    router.push("/results");
   }
   return (
     <Form {...form}>
