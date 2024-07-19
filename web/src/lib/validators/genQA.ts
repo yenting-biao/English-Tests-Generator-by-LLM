@@ -43,6 +43,7 @@ export const genQASchema = z.object({
     .max(5, {
       message: "Number of options must be at most 5.",
     }),
+  questionTypes: z.array(z.number().int()),
   examples: z
     .string()
     // .min(50, {

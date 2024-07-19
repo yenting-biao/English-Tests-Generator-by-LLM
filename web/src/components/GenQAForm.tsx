@@ -23,8 +23,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 import { genQASchema as formSchema } from "@/lib/validators/genQA";
+import { questionTypes } from "@/lib/constants/questionTypes";
 import React from "react";
 
 export function GenQAForm({
@@ -46,6 +47,7 @@ export function GenQAForm({
       topic: "",
       numQuestions: 4,
       numOptions: 4,
+      questionTypes: [],
       examples: "",
     },
   });
@@ -104,6 +106,9 @@ export function GenQAForm({
         <PassageLengthField form={form} />
         <NumQuestionsField form={form} />
         <NumOptionsField form={form} />
+        <div className="md:col-span-2">
+          <QuestionTypesField form={form} />
+        </div>
         <div className="md:col-span-2">
           <TopicField form={form} />
         </div>
@@ -294,6 +299,61 @@ function NumOptionsField({
           <FormDescription>
             Select the number of options for each question.
           </FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+function QuestionTypesField({
+  form,
+}: {
+  form: UseFormReturn<z.infer<typeof formSchema>>;
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name="questionTypes"
+      render={({ field }) => (
+        <FormItem>
+          <div className="mb-2">
+            <FormLabel>Question Types</FormLabel>
+            <FormDescription>
+              Select the types of questions you want to generate.
+            </FormDescription>
+          </div>
+          <div className="space-y-3">
+            {questionTypes.map((value, i) => (
+              <FormField
+                key={i}
+                control={form.control}
+                name="questionTypes"
+                render={({ field }) => {
+                  return (
+                    <FormItem
+                      key={i}
+                      className="flex flex-row items-start space-x-3 space-y-0"
+                    >
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value?.includes(i)}
+                          onCheckedChange={(checked) => {
+                            return checked
+                              ? field.onChange([...field.value, i])
+                              : field.onChange(
+                                  field.value?.filter((value) => value !== i)
+                                );
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="font-normal">{value}</FormLabel>
+                    </FormItem>
+                  );
+                }}
+              />
+            ))}
+          </div>
           <FormMessage />
         </FormItem>
       )}
