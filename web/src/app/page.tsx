@@ -13,6 +13,7 @@ export default function Home() {
   const resultEndRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (
+      result.length > 0 &&
       resultEndRef.current &&
       resultRef.current &&
       resultRef.current.scrollHeight > resultRef.current.clientHeight
@@ -25,7 +26,7 @@ export default function Home() {
     }
   }, [result]);
   return (
-    <>
+    <div>
       <GenQAForm
         setResult={setResult}
         streaming={streaming}
@@ -46,7 +47,7 @@ export default function Home() {
         </div>
         <CopyButton result={result} streaming={streaming} />
       </div>
-    </>
+    </div>
   );
 }
 

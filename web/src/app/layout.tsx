@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter as Fontsans } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { BookCheck } from "lucide-react";
 
 const fontSans = Fontsans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -20,23 +18,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased flex flex-col items-center p-8",
-          fontSans.variable
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <h3 className="scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight mb-10">
-            Reading Comprehension Questions Generator
-          </h3>
-          {children}
-        </ThemeProvider>
+      <body className={fontSans.variable}>
+        <div className="min-h-screen bg-background font-sans antialiased flex flex-col items-center p-8">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <h3 className="scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight mb-10">
+              Reading Comprehension Questions Generator
+            </h3>
+            {children}
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );
