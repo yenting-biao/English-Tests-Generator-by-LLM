@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     });
 
     const result = await streamText({
-      model: openai("gpt-4o-mini"),
+      model: openai("gpt-4o"),
       messages: messages,
       maxTokens: 2048,
       temperature: 0.5,
