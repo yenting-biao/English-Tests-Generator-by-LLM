@@ -19,7 +19,7 @@ export default function Home() {
       resultRef.current.scrollHeight > resultRef.current.clientHeight
     ) {
       resultEndRef.current.scrollIntoView({
-        behavior: "auto",
+        behavior: "smooth",
         block: "nearest",
         inline: "nearest",
       });
@@ -42,7 +42,7 @@ export default function Home() {
           className="w-full h-full whitespace-pre-wrap scroll-smooth overflow-y-scroll p-5 border-2 border-black dark:border-neutral-50 rounded-xl"
           ref={resultRef}
         >
-          {result}
+          <p>{result}</p>
           <div ref={resultEndRef} />
         </div>
         <CopyButton result={result} streaming={streaming} />

@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
     const result = await streamText({
       model: openai("gpt-4o-mini"),
       messages: messages,
-      maxTokens: 2048,
+      maxTokens: 8192,
       temperature: 0.3,
     });
 
@@ -152,20 +152,24 @@ function getPrompt(
       `
       : "The questions should contain different types of questions."
   }
-  I will give you some examples of reading comprehension questions. Please generate ${numPassages} reading comprehension question whose difficulty is similar to the examples, but the passage and questions should be different. Moreover, please also give the answers in the end. 
+  I will give you some examples of reading comprehension questions. Please generate reading comprehension questions whose difficulty is similar to the examples, but the passage and questions should be different. Moreover, please also give the answers in the end. 
   Below are some examples, please learn from them carefully:\n\n
   
   ${examples}
 
-  Above are the examples. I believe that you are now a master of generating reading comprehension questions.  Please generate ${numPassages} reading comprehension question whose quality is similar to the examples, and satisfy the 5 requirements I mentioned above before the examples. You should also ensure that all answer choices are plausible, paraphrased rather than directly quoted, and include misleading incorrect options. The questions should be specific and test the student's understanding and critical thinking skills.
+  Above are the examples. I believe that you are now a master of generating reading comprehension questions.  Please generate reading comprehension questions whose quality is similar to the examples, and satisfy the 5 requirements I mentioned above before the examples. You should also ensure that all answer choices are plausible, paraphrased rather than directly quoted, and include misleading incorrect options. The questions should be specific and test the student's understanding and critical thinking skills.
   
-  Please output each reading comprehension question in the following format, and separate each with two blank line:
+  Please generate ${numPassages} passages and ${numQuestions} questions for each passage, and output each reading comprehension question in the following format, and separate each with two blank line:
     
   Passage: 
   [The passage you generated]
   
-  Question: 
+  Questions: 
   1. [Question 1 Description]
+  (A) [Choice A]
+  (B) [Choice B]
+  ...(Other choices)
+  2. [Question 2 Description]
   (A) [Choice A]
   (B) [Choice B]
   ...(Other choices and questions)
