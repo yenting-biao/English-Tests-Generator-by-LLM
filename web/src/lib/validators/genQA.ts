@@ -1,6 +1,15 @@
 import z from "zod";
 
 export const genQASchema = z.object({
+  numPassages: z
+    .number()
+    .int()
+    .min(1, {
+      message: "You have to generate at least 1 passage.",
+    })
+    .max(5, {
+      message: "You can generate at most 5 passages.",
+    }),
   difficulty: z
     .number()
     .int()
@@ -21,8 +30,8 @@ export const genQASchema = z.object({
     }),
   topic: z
     .string()
-    .max(50, {
-      message: "Topic must be at most 50 characters.",
+    .max(100, {
+      message: "Topic must be at most 100 characters.",
     })
     .optional(),
   numQuestions: z

@@ -4,16 +4,14 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
-import {
-  questionTypes as typesString,
-  questionTypesDesciprtion,
-} from "@/lib/constants/questionTypes";
+import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
 
 export const maxDuration = 120;
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
-  let difficulty,
+  let numPassages,
+    difficulty,
     passageLength,
     topic,
     numQuestions,
@@ -22,6 +20,7 @@ export async function POST(req: NextRequest) {
     examples;
   try {
     const validatedData = genQASchema.parse(data);
+    numPassages = validatedData.numPassages;
     difficulty = validatedData.difficulty;
     passageLength = validatedData.passageLength;
     topic = validatedData.topic;
@@ -42,9 +41,9 @@ export async function POST(req: NextRequest) {
     {
       role: "system",
       content: `
-      You are an English teacher skilled in designing reading comprehension problems for English learners with different levels. A reading comprehension problem contains passages and some questions based on the passage. You will be asked to generate a reading comprehension question based on the given requirements, including difficulty, passage length, topic, number of questions, number of options, question types, etc.
+      You are an English teacher skilled in designing reading comprehension problems for English learners with different levels. A reading comprehension problem contains a passage and some questions based on the passage. You will be asked to generate a reading comprehension question based on the requirements given by the user, including number of passages to be generated, difficulty, passage length, topic, number of questions, number of options, question types, etc.
 
-      Among the requirements, the difficulty level is based on the Common European Framework of Reference for Languages (CEFR). CEFR is a guideline used to describe achievements of learners of foreign languages across Europe and, increasingly, in other countries. CEFR divides learners into three broad divisions that can each be further divided into two levels; for each level, it describes what a learner is supposed to be able to do in reading, listening, speaking and writing. The following discription indicates these levels:
+      Among the requirements, the difficulty level is based on the Common European Framework of Reference for Languages (CEFR). The passage and question you generate should fit the criterion of CEFR given by the user. CEFR is a guideline used to describe achievements of learners of foreign languages across Europe and, increasingly, in other countries. CEFR divides learners into three broad divisions that can each be further divided into two levels; for each level, it describes what a learner is supposed to be able to do in reading, listening, speaking and writing. The following discription indicates these levels:
       - A: Basic user
         - A1: Breakthrough:
           - Can understand and use familiar everyday expressions and very basic phrases aimed at the satisfaction of needs of a concrete type.
@@ -75,15 +74,17 @@ export async function POST(req: NextRequest) {
           - Can summarise information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation.
           - Can express themselves spontaneously, very fluently and precisely, differentiating finer shades of meaning even in the most complex situations.
       
-      Last but not least, a good reading comprehension problem should be **TRICKY** and satisfy the following requirements:
-      1. **The question choices should be PLAUSIBLE**, so that students need to read very carefully to obtain the correct answer. 
-      2. The description of the choices should be **in other words** rather than directly the same with the sentences in the passage. 
-      3. The choices that are not the correct answer for the question should also be misleading and attract students to choose.
+      To ensure a reading comprehension problem is effective, it should be **challenging** and meet the following criteria:
+      1. **Plausible question choices:** The answer options should seem reasonable, requiring students to read carefully to identify the correct one.
+      2. **Paraphrased choices:** The descriptions of the choices should be rephrased rather than directly mirroring the sentences in the passage.
+      3. **Misleading incorrect choices:** The incorrect options should be designed to mislead and attract students, making the question more difficult.
+      4. **Specific and Detailed Question:** Frame the question to require a detailed understanding of the passage. Ask about specific facts, events, or arguments presented in the text, rather than general ideas.
       `,
     },
     {
       role: "user",
       content: getPrompt(
+        numPassages,
         difficulty,
         passageLength,
         topic,
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
     });
 
     const result = await streamText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       messages: messages,
       maxTokens: 2048,
       temperature: 0.3,
@@ -119,6 +120,7 @@ export async function POST(req: NextRequest) {
 }
 
 function getPrompt(
+  numPassages: number,
   difficulty: number,
   passageLength: number,
   topic: string | undefined,
@@ -134,7 +136,7 @@ function getPrompt(
     .join("\n");
 
   return `
-  Please generate a reading comprehension question with the following requirement:
+  Please generate ${numPassages} reading comprehension questions with the following requirement:
   1. The overall difficulty level is CEFR ${difficultyStr}.
   2. The passage is around ${passageLength} words long, containing 3 to 5 paragraphs. 
   3. ${
@@ -145,19 +147,19 @@ function getPrompt(
   4. There should be ${numQuestions} multiple choice questions, each with ${numOptions} answer choices. 
   5. ${
     questionTypes.length > 0
-      ? `The questions should contain the following types but not limited to: 
+      ? `The questions should contain the following types: 
       ${questionTypeFormatStr}.
       `
       : "The questions should contain different types of questions."
   }
-  I will give you some examples of reading comprehension questions. Please generate a reading comprehension question whose difficulty is similar to the examples, but the passage and questions should be different. Moreover, please also give the answers in the end. 
+  I will give you some examples of reading comprehension questions. Please generate ${numPassages} reading comprehension question whose difficulty is similar to the examples, but the passage and questions should be different. Moreover, please also give the answers in the end. 
   Below are some examples, please learn from them carefully:\n\n
   
   ${examples}
 
-  Above are the examples. I believe that you are now a master of generating reading comprehension questions. Please generate a reading comprehension question whose quality is similar to the examples, and satisfy the 5 requirements I mentioned above before the examples.
+  Above are the examples. I believe that you are now a master of generating reading comprehension questions.  Please generate ${numPassages} reading comprehension question whose quality is similar to the examples, and satisfy the 5 requirements I mentioned above before the examples. You should also ensure that all answer choices are plausible, paraphrased rather than directly quoted, and include misleading incorrect options. The questions should be specific and test the student's understanding and critical thinking skills.
   
-  Please output the reading comprehension question in the following format:
+  Please output each reading comprehension question in the following format, and separate each with two blank line:
     
   Passage: 
   [The passage you generated]
