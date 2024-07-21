@@ -19,7 +19,7 @@ export default function Home() {
       resultRef.current.scrollHeight > resultRef.current.clientHeight
     ) {
       resultEndRef.current.scrollIntoView({
-        behavior: "smooth",
+        behavior: "auto",
         block: "nearest",
         inline: "nearest",
       });
