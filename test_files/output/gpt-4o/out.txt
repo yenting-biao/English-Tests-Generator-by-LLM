@@ -1,39 +1,37 @@
 Passage:
-The concept of the biosphere, the regions inhabited by life, is of fundamental significance in understanding Earth's ecology. Coined by geologist Eduard Suess in the late 19th century, "biosphere" refers to the domain of our planet that supports life, including the cycle of matter and transfer of energy among organisms. The biosphere encompasses diverse ecosystems, from the deepest oceanic trenches to the highest mountaintops, as well as thick forests and arid deserts.
+The Great Barrier Reef, located off the coast of Queensland, Australia, is the world's largest coral reef system. Stretching over 2,300 kilometers, it is composed of nearly 3,000 individual reefs and 900 islands, and is home to an extraordinary diversity of marine life. The reef is a popular destination for tourists, particularly for scuba diving and snorkeling, and it also provides significant economic and cultural value to Australia.
 
-One of the intriguing aspects of the biosphere is its intricate interactions and dependencies. For instance, plants, via photosynthesis, convert carbon dioxide and sunlight into oxygen and glucose, which are essential for the respiration of animals and other organisms. Similarly, the decomposition of organic matter by microorganisms recycles vital nutrients back into the soil, facilitating the growth of new plants. Hence, the interdependence of species and natural processes forms a network that sustains life on Earth.
+The Great Barrier Reef is not only a vibrant ecosystem, but it also plays a crucial role in the world's climate system. Coral reefs, in general, are known to be very sensitive to changes in temperature, and the Great Barrier Reef is no exception. In recent years, the reef has been severely affected by climate change, with rising ocean temperatures leading to widespread coral bleaching. Coral bleaching occurs when corals are stressed by changes in conditions such as temperature, light, or nutrients, causing them to expel the symbiotic algae living in their tissues, which results in the coral turning completely white.
 
-Moreover, the carbon cycle, a crucial component of the biosphere, illustrates the flow of carbon among various reservoirs, including the atmosphere, hydrosphere, lithosphere, and biosphere. Human activities, especially the combustion of fossil fuels and deforestation, have significantly altered this cycle, leading to an increase in atmospheric carbon dioxide. These changes have contributed to global warming—a phenomenon causing shifts in climate patterns and posing a threat to many ecosystems.
+Efforts to protect and conserve the Great Barrier Reef are ongoing. The Australian government, in partnership with various environmental organizations, has implemented measures to reduce pollution, manage fishing, and improve the resilience of the reef to climate change. Despite these efforts, the future of the Great Barrier Reef remains uncertain, with scientists warning that immediate global action to reduce greenhouse gas emissions is necessary to prevent further damage.
 
-The biosphere also plays a pivotal role in regulating Earth's climate. Forests, wetlands, and oceans act as carbon sinks, absorbing more carbon dioxide than they release, thereby mitigating the greenhouse effect. Furthermore, the albedo effect, where certain surfaces like ice and snow reflect sunlight, helps to cool the planet. However, with the current rate of climate change, these natural processes are being disrupted, resulting in more pronounced and frequent ecological imbalances.
+Questions:
+1. What is the main idea of the passage?
+(A) The Great Barrier Reef is a popular tourist destination.
+(B) The Great Barrier Reef is suffering from the effects of climate change.
+(C) The Great Barrier Reef is the world's largest coral reef system.
+(D) The Great Barrier Reef provides significant economic and cultural value to Australia.
 
-Question:
-1. Which of the following best describes the main idea of the passage?
-(A) Human activities have little impact on the biosphere.
-(B) The biosphere is an interconnected system vital for life on Earth.
-(C) The concept of the biosphere was only recently explored.
-(D) Natural processes in the biosphere are independent of each other.
+2. According to the passage, what causes coral bleaching?
+(A) The expulsion of symbiotic algae from the coral due to changes in conditions.
+(B) The increase in fishing activities in the reef area.
+(C) The implementation of measures to reduce pollution.
+(D) The decrease in the number of tourists visiting the reef.
 
-2. According to the passage, what is one way humans have altered the carbon cycle?
-(A) By promoting plant photosynthesis.
-(B) By increasing carbon dioxide through fossil fuel usage.
-(C) By recycling nutrients into the soil.
-(D) By converting glucose into oxygen.
+3. Based on the information in the passage, what can be inferred about the future of the Great Barrier Reef?
+(A) It will continue to be a popular destination for tourists.
+(B) It will recover from the effects of coral bleaching.
+(C) It is uncertain and depends on global action to reduce greenhouse gas emissions.
+(D) It will be completely destroyed due to climate change.
 
-3. What does the author imply about the role of forests, wetlands, and oceans?
-(A) They are the primary producers of oxygen.
-(B) They contribute to the greenhouse effect.
-(C) They act as natural carbon storage systems.
-(D) They primarily affect the albedo effect.
-
-4. What does the term "albedo effect" most nearly mean as used in the passage?
-(A) The absorption of sunlight by forests.
-(B) The reflection of sunlight by icy surfaces.
-(C) The increase of atmospheric carbon dioxide.
-(D) The decomposition of organic matter by microorganisms.
+4. In the context of the passage, what does the word "resilience" most likely mean?
+(A) The ability to recover quickly from difficulties.
+(B) The ability to resist the effects of pollution.
+(C) The ability to adapt to changes in temperature.
+(D) The ability to support a diverse range of marine life.
 
 Answers:
-1. (B)
-2. (B)
-3. (C)
-4. (B)
+1. (B) The Great Barrier Reef is suffering from the effects of climate change.
+2. (A) The expulsion of symbiotic algae from the coral due to changes in conditions.
+3. (C) It is uncertain and depends on global action to reduce greenhouse gas emissions.
+4. (A) The ability to recover quickly from difficulties.
