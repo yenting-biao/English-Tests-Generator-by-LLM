@@ -6,7 +6,7 @@ import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
 
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
