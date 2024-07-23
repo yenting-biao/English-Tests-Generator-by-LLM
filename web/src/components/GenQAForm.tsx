@@ -64,7 +64,7 @@ export function GenQAForm({
     });
 
     try {
-      const res = await fetch("/api/generate", {
+      const res = await fetch("/api/reading", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
