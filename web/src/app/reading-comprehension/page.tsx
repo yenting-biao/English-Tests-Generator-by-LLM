@@ -1,6 +1,6 @@
 "use client";
 
-import { GenQAForm } from "@/app/reading-comprehension/_components/GenQAForm";
+import { ReadingForm } from "@/app/reading-comprehension/_components/ReadingForm";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Check, Copy } from "lucide-react";
@@ -27,7 +27,7 @@ export default function Home() {
   }, [result]);
   return (
     <div>
-      <GenQAForm
+      <ReadingForm
         setResult={setResult}
         streaming={streaming}
         setStreaming={setStreaming}

@@ -28,7 +28,7 @@ import { genQASchema as formSchema } from "@/lib/validators/genQA";
 import { questionTypes } from "@/lib/constants/questionTypes";
 import React from "react";
 
-export function GenQAForm({
+export function ReadingForm({
   setResult,
   streaming,
   setStreaming,
