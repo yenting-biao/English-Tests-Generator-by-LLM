@@ -24,7 +24,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { genQASchema as formSchema } from "@/lib/validators/genQA";
+import { readingComprehensionSchema as formSchema } from "@/lib/validators/genQA";
 import { questionTypes } from "@/lib/constants/questionTypes";
 import React from "react";
 

@@ -1,15 +1,6 @@
 import z from "zod";
 
-export const genQASchema = z.object({
-  numPassages: z
-    .number()
-    .int()
-    .min(1, {
-      message: "You have to generate at least 1 passage.",
-    })
-    .max(5, {
-      message: "You can generate at most 5 passages.",
-    }),
+const baseSchema = z.object({
   difficulty: z
     .number()
     .int()
@@ -19,21 +10,6 @@ export const genQASchema = z.object({
     .max(6, {
       message: "Difficulty must be at most 6.",
     }),
-  passageLength: z
-    .number()
-    .int()
-    .min(100, {
-      message: "Length must be at least 100.",
-    })
-    .max(1000, {
-      message: "Length must be at most 1000.",
-    }),
-  topic: z
-    .string()
-    .max(100, {
-      message: "Topic must be at most 100 characters.",
-    })
-    .optional(),
   numQuestions: z
     .number()
     .int()
@@ -62,4 +38,35 @@ export const genQASchema = z.object({
       message:
         "The examples you provided are too long. It should be less than 100,000 characters.",
     }),
+});
+
+export const readingComprehensionSchema = baseSchema.extend({
+  numPassages: z
+    .number()
+    .int()
+    .min(1, {
+      message: "You have to generate at least 1 passage.",
+    })
+    .max(5, {
+      message: "You can generate at most 5 passages.",
+    }),
+  passageLength: z
+    .number()
+    .int()
+    .min(100, {
+      message: "Length must be at least 100.",
+    })
+    .max(1000, {
+      message: "Length must be at most 1000.",
+    }),
+  topic: z
+    .string()
+    .max(100, {
+      message: "Topic must be at most 100 characters.",
+    })
+    .optional(),
+});
+
+export const listeningTestSchema = baseSchema.extend({
+  url: z.string().url({ message: "Please provide a valid URL." }),
 });
