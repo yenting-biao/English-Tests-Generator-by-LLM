@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { genQASchema } from "@/lib/validators/genQA";
+import { readingComprehensionSchema } from "@/lib/validators/genQA";
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { privateEnv } from "@/lib/validators/env";
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     questionTypes,
     examples;
   try {
-    const validatedData = genQASchema.parse(data);
+    const validatedData = readingComprehensionSchema.parse(data);
     numPassages = validatedData.numPassages;
     difficulty = validatedData.difficulty;
     passageLength = validatedData.passageLength;

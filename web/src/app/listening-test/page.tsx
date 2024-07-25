@@ -1,48 +1,32 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { ListeningForm } from "./_components/ListeningForm";
+import { Separator } from "@/components/ui/separator";
 
 export default function ListeningPage() {
-  const [url, setUrl] = useState<string>("");
-  const [transcription, setTranscription] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/listening", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: url }),
-      });
-      if (response.ok) {
-        alert("Transcription successful");
-        const data = await response.json();
-        const transcription = data.transcription;
-        setTranscription(transcription);
-      } else {
-        alert("Transcription failed");
-      }
-    } catch (error) {
-      console.error("error", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [streaming, setStreaming] = useState<boolean>(false);
+  const [result, setResult] = useState<string>("");
+  const resultRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div className="w-full max-w-3xl space-y-4">
-      <h1>Listening Test</h1>
-      <Input value={url} onChange={(e) => setUrl(e.target.value)} />
-      <Button onClick={handleSubmit} disabled={loading}>
-        Submit
-      </Button>
-      <div>
-        <h2>Transcription</h2>
-        <p>{transcription}</p>
+      <ListeningForm
+        streaming={streaming}
+        setStreaming={setStreaming}
+        resultRef={resultRef}
+        setResult={setResult}
+      />
+      <Separator className="max-w-3xl w-full mt-10" />
+      <div className="max-w-3xl w-full h-dvh py-5 flex flex-col">
+        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
+          The Generated Questions and Answers for the Youtube Video:
+        </h3>
+        <div
+          className="w-full h-full whitespace-pre-wrap scroll-smooth overflow-y-scroll p-5 border-2 border-black dark:border-neutral-50 rounded-xl"
+          ref={resultRef}
+        >
+          <p>{result}</p>
+        </div>
       </div>
     </div>
   );
