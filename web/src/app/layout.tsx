@@ -26,9 +26,6 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <h3 className="scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight mb-10">
-              Reading Comprehension Questions Generator
-            </h3>
             {children}
           </ThemeProvider>
         </div>

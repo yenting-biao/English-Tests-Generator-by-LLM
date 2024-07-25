@@ -1,93 +1,40 @@
-"use client";
-
-import { GenQAForm } from "@/components/GenQAForm";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Check, Copy } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function Home() {
-  const [result, setResult] = useState<string>("");
-  const [streaming, setStreaming] = useState<boolean>(false);
-  const resultRef = useRef<HTMLDivElement | null>(null);
-  const resultEndRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if (
-      result.length > 0 &&
-      resultEndRef.current &&
-      resultRef.current &&
-      resultRef.current.scrollHeight > resultRef.current.clientHeight
-    ) {
-      resultEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "nearest",
-      });
-    }
-  }, [result]);
   return (
-    <div>
-      <GenQAForm
-        setResult={setResult}
-        streaming={streaming}
-        setStreaming={setStreaming}
-        resultRef={resultRef}
-      />
-      <Separator className="max-w-3xl w-full mt-10" />
-      <div className="max-w-3xl w-full h-dvh py-5 flex flex-col">
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
-          The Generated Passage, Questions, and Answers:
-        </h3>
-        <div
-          className="w-full h-full whitespace-pre-wrap scroll-smooth overflow-y-scroll p-5 border-2 border-black dark:border-neutral-50 rounded-xl"
-          ref={resultRef}
-        >
-          <p>{result}</p>
-          <div ref={resultEndRef} />
-        </div>
-        <CopyButton result={result} streaming={streaming} />
+    <div className="my-auto w-full">
+      <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight leading-relaxed lg:text-6xl text-center">
+        English Problems Generator
+      </h1>
+      <div className="max-w-xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-14 mx-auto">
+        <StyledLink href="/reading-comprehension">
+          Reading Comprehension
+        </StyledLink>
+        <StyledLink href="/listening-test">Listening Test</StyledLink>
       </div>
     </div>
   );
 }
 
-function CopyButton({
-  result,
-  streaming,
+function StyledLink({
+  href,
+  children,
+  className,
 }: {
-  result: string;
-  streaming: boolean;
+  href: string;
+  children: React.ReactNode;
+  className?: string;
 }) {
-  const [justCopied, setJustCopied] = useState<boolean>(false);
-  useEffect(() => {
-    if (justCopied) {
-      const timeout = setTimeout(() => {
-        setJustCopied(false);
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [justCopied]);
-
   return (
-    <Button
-      className="w-fit mt-5"
-      onClick={() => {
-        setJustCopied(true);
-        navigator.clipboard.writeText(result);
-      }}
-      disabled={justCopied || streaming}
-    >
-      {streaming ? (
-        "Generating..."
-      ) : justCopied ? (
-        <>
-          <Check size={16} className="mr-2" /> Copied
-        </>
-      ) : (
-        <>
-          <Copy size={16} className="mr-2" /> Copy
-        </>
+    <Link
+      href={href}
+      className={cn(
+        "p-5 border-4 rounded-xl text-center text-lg md:text-xl font-semibold tracking-tight first:mt-0 hover:bg-secondary",
+        className
       )}
-    </Button>
+    >
+      {children}
+    </Link>
   );
 }
