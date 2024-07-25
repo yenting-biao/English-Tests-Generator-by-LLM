@@ -5,6 +5,7 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -39,6 +40,7 @@ export function ListeningForm({
   setStreaming: React.Dispatch<React.SetStateAction<boolean>>;
   resultRef: React.MutableRefObject<HTMLDivElement | null>;
 }) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,12 +56,6 @@ export function ListeningForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // The form values are type-safe and validated.
     setStreaming(true);
-    setResult("");
-    resultRef.current?.scrollIntoView({
-      behavior: "auto",
-      block: "start",
-      inline: "nearest",
-    });
 
     try {
       const res = await fetch("/api/listening", {
@@ -70,17 +66,31 @@ export function ListeningForm({
         body: JSON.stringify(values),
       });
       if (res.status === 400) {
-        alert(
-          "Some error occurred. Please check you provided a valid Youtube link and the form is filled correctly."
-        );
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "Please make sure you provided a valid Youtube link and the form is filled correctly.",
+          duration: 3000,
+        });
+        return;
+      } else if (!res.ok || !res.body) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "Failed to generate questions due to server error. Please try again later.",
+          duration: 3000,
+        });
         return;
       }
-      if (!res.ok || !res.body) {
-        alert(
-          "Failed to generate questions due to server error. Please try again later."
-        );
-        return;
-      }
+
+      setResult("");
+      resultRef.current?.scrollIntoView({
+        behavior: "auto",
+        block: "start",
+        inline: "nearest",
+      });
 
       const reader = res.body.getReader();
       let count = 0;

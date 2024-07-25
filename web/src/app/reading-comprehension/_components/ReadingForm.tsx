@@ -27,6 +27,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { readingComprehensionSchema as formSchema } from "@/lib/validators/genQA";
 import { questionTypes } from "@/lib/constants/questionTypes";
 import React from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export function ReadingForm({
   setResult,
@@ -52,16 +53,11 @@ export function ReadingForm({
       examples: "",
     },
   });
+  const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // The form values are type-safe and validated.
     setStreaming(true);
-    setResult("");
-    resultRef.current?.scrollIntoView({
-      behavior: "auto",
-      block: "start",
-      inline: "nearest",
-    });
 
     try {
       const res = await fetch("/api/reading", {
@@ -71,10 +67,31 @@ export function ReadingForm({
         },
         body: JSON.stringify(values),
       });
-      if (!res.ok || !res.body) {
-        alert("Failed to generate questions. Please try again.");
-        throw new Error("Failed to generate questions.");
+      if (res.status === 400) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Please make sure the form is filled correctly.",
+          duration: 3000,
+        });
+        return;
+      } else if (!res.ok || !res.body) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "Failed to generate questions due to server error. Please try again later.",
+          duration: 3000,
+        });
+        return;
       }
+
+      setResult("");
+      resultRef.current?.scrollIntoView({
+        behavior: "auto",
+        block: "start",
+        inline: "nearest",
+      });
 
       const reader = res.body.getReader();
       let count = 0;
