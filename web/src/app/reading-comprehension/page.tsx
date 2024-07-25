@@ -1,6 +1,6 @@
 "use client";
 
-import { GenQAForm } from "@/components/GenQAForm";
+import { GenQAForm } from "@/app/reading-comprehension/_components/GenQAForm";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Check, Copy } from "lucide-react";
