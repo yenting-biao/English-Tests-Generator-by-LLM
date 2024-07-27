@@ -38,3 +38,6 @@ next-env.d.ts
 
 # audio downloaded
 /audio/*.m4a
+
+# db
+pg-data/

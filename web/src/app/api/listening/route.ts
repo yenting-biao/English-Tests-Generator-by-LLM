@@ -10,6 +10,11 @@ import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
 // ref: https://github.com/fent/node-ytdl-core/issues/932#issuecomment-2233405812
 import ytdl from "@distube/ytdl-core";
 import fs from "fs";
+import { db } from "@/db";
+import {
+  listeningGenResultTable,
+  listeningQuestionTypesTable,
+} from "@/db/schema";
 export const maxDuration = 60;
 
 const openai = new OpenAI({
@@ -61,7 +66,7 @@ export async function POST(req: NextRequest) {
       );
     }
   }
-  console.log("Transcription", transcription);
+  console.log("Transcription:\n", transcription);
 
   const messages: Message[] = [
     {
@@ -131,11 +136,34 @@ export async function POST(req: NextRequest) {
       messages: messages,
       maxTokens: 8192,
       temperature: 0.3,
+      onFinish: async (param) => {
+        const ret = await db
+          .insert(listeningGenResultTable)
+          .values({
+            difficulty: difficulty,
+            url: url,
+            numQuestions: numQuestions,
+            numOptions: numOptions,
+            examples: examples,
+            transcription: String(transcription),
+            generatedResult: param.text,
+          })
+          .returning();
+
+        await Promise.all(
+          questionTypes.map((type) => {
+            return db.insert(listeningQuestionTypesTable).values({
+              type: type,
+              generationId: ret[0].id,
+            });
+          })
+        );
+      },
     });
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.log("API has some problems:", error);
+    console.log("API or DB has some problems:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

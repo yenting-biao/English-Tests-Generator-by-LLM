@@ -5,6 +5,8 @@ import { streamText } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
+import { db } from "@/db";
+import { readingQuestionTypesTable, readingGenResultTable } from "@/db/schema";
 
 export const maxDuration = 60;
 
@@ -107,11 +109,35 @@ export async function POST(req: NextRequest) {
       messages: messages,
       maxTokens: 8192,
       temperature: 0.3,
+      onFinish: async (param) => {
+        const ret = await db
+          .insert(readingGenResultTable)
+          .values({
+            difficulty: difficulty,
+            numQuestions: numQuestions,
+            numOptions: numOptions,
+            numPassages: numPassages,
+            passageLength: passageLength,
+            topic: topic ?? "",
+            examples: examples,
+            generatedResult: param.text,
+          })
+          .returning();
+
+        await Promise.all(
+          questionTypes.map((type) => {
+            return db.insert(readingQuestionTypesTable).values({
+              type: type,
+              generationId: ret[0].id,
+            });
+          })
+        );
+      },
     });
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.log("API has some problems:", error);
+    console.log("API or DB has some problems:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
