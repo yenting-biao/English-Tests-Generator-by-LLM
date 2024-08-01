@@ -28,7 +28,6 @@ const baseSchema = z.object({
     .max(5, {
       message: "Number of options must be at most 5.",
     }),
-  questionTypes: z.array(z.number().int()),
   examples: z
     .string()
     // .min(50, {
@@ -41,6 +40,7 @@ const baseSchema = z.object({
 });
 
 export const readingComprehensionSchema = baseSchema.extend({
+  questionTypes: z.array(z.number().int()),
   numPassages: z
     .number()
     .int()
@@ -68,5 +68,8 @@ export const readingComprehensionSchema = baseSchema.extend({
 });
 
 export const listeningTestSchema = baseSchema.extend({
+  questionTypes: z.array(z.number().int()),
   url: z.string().url({ message: "Please provide a valid URL." }),
 });
+
+export const clozeTestSchema = baseSchema;

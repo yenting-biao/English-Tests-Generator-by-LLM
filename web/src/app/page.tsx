@@ -14,6 +14,7 @@ export default function Home() {
         <StyledLink href="/listening-comprehension">
           Listening Comprehension
         </StyledLink>
+        <StyledLink href="/cloze">Cloze</StyledLink>
       </div>
     </div>
   );
