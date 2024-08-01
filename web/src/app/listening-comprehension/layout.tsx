@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Listening Comprehension Tests Generator",
+  description:
+    "Generate listening comprehension tests for your students by Large Language Models.",
+};
+
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

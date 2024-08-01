@@ -42,7 +42,7 @@ export function ClozeForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       difficulty: 4,
-      numQuestions: 4,
+      numQuestions: 5,
       numOptions: 4,
       examples: "",
     },
@@ -53,7 +53,7 @@ export function ClozeForm({
     setStreaming(true);
 
     try {
-      const res = await fetch("/api/listening", {
+      const res = await fetch("/api/cloze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -269,9 +269,8 @@ function ExamplesField({
             {...field}
           />
           <FormDescription>
-            Enter some (3-5) examples of the listening test problems so that
-            LLMs can learn from them. Please separate each example with a
-            newline.
+            Enter some (3-5) examples of the cloze tests so that LLMs can learn
+            from them. Please separate each example with a newline.
           </FormDescription>
           <FormMessage />
         </FormItem>

@@ -7,9 +7,9 @@ import { Toaster } from "@/components/ui/toaster";
 const fontSans = Fontsans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Reading Comprehension Questions Generator",
+  title: "English Tests Generator",
   description:
-    "Generate reading comprehension problems for your students by Large Language Models.",
+    "Generate english tests for your students by Large Language Models.",
 };
 
 export default function RootLayout({

@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Cloze Tests Generator",
+  description:
+    "Generate cloze tests for your students by Large Language Models.",
+};
+
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
