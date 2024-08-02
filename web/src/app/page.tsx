@@ -15,6 +15,7 @@ export default function Home() {
           Listening Comprehension
         </StyledLink>
         <StyledLink href="/cloze">Cloze</StyledLink>
+        <StyledLink href="/listening-cloze">Listening Cloze</StyledLink>
       </div>
     </div>
   );
