@@ -27,7 +27,7 @@ import { listeningClozeSchema as formSchema } from "@/lib/validators/genQA";
 import React from "react";
 import { Input } from "@/components/ui/input";
 
-export function ClozeForm({
+export function ListeningClozeForm({
   setResult,
   streaming,
   setStreaming,
@@ -67,15 +67,24 @@ export function ClozeForm({
       });
     }
 
+    const formData = new FormData();
+    formData.append("numBlanks", values.numBlanks.toString());
+    if (values.audioFile) {
+      formData.append("audioFile", values.audioFile);
+    }
+    if (values.transcript && values.transcript !== "") {
+      formData.append("transcript", values.transcript);
+    }
+
     setStreaming(true);
 
     try {
       const res = await fetch("/api/listening-cloze", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
+        body: formData,
       });
       if (res.status === 400) {
         toast({
@@ -197,6 +206,7 @@ function AudioFileField({
     <FormField
       control={form.control}
       name="audioFile"
+      // eslint-disable-next-line no-unused-vars
       render={({ field: { value, onChange, ...fieldProps } }) => (
         <FormItem>
           <FormLabel>
@@ -208,9 +218,10 @@ function AudioFileField({
               placeholder="Audio File"
               type="file"
               accept="audio/*"
-              onChange={(event) =>
-                onChange(event.target.files && event.target.files[0])
-              }
+              onChange={(event) => {
+                onChange(event.target.files && event.target.files[0]);
+                console.log(event.target.files);
+              }}
             />
           </FormControl>
           <FormDescription>

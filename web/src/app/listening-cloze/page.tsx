@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { ClozeForm } from "./_components/ClozeForm";
+import { ListeningClozeForm } from "./_components/ListeningClozeForm";
 import { Separator } from "@/components/ui/separator";
 
 export default function ListeningPage() {
@@ -10,7 +10,7 @@ export default function ListeningPage() {
 
   return (
     <div className="w-full max-w-3xl space-y-4">
-      <ClozeForm
+      <ListeningClozeForm
         streaming={streaming}
         setStreaming={setStreaming}
         resultRef={resultRef}

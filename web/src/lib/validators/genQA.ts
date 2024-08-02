@@ -75,7 +75,7 @@ export const listeningTestSchema = baseSchema.extend({
 export const clozeTestSchema = baseSchema;
 
 export const listeningClozeSchema = z.object({
-  numBlanks: z.number().int().min(1).max(20),
+  numBlanks: z.number().int().min(1).max(20).or(z.string().min(1).max(20)),
   transcript: z.string().optional(),
   audioFile: z.any().optional(),
 });
