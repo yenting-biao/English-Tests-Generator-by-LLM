@@ -57,7 +57,11 @@ export function ListeningClozeForm({
         duration: 3000,
       });
       return;
-    } else if (values.transcript !== "" && values.audioFile) {
+    } else if (
+      values.transcript &&
+      values.transcript !== "" &&
+      values.audioFile
+    ) {
       toast({
         variant: "default",
         title: "Your audio file will be ignored.",
