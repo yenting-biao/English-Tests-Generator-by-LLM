@@ -6,6 +6,7 @@ import { streamText } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { db } from "@/db";
+import { listeningClozeGenResultTable } from "@/db/schema";
 export const maxDuration = 60;
 
 const openai = new OpenAI({
@@ -69,25 +70,14 @@ export async function POST(req: NextRequest) {
       maxTokens: 4096,
       temperature: 0.3,
       onFinish: async (param) => {
-        // const ret = await db
-        //   .insert(listeningGenResultTable)
-        //   .values({
-        //     difficulty: difficulty,
-        //     numQuestions: numQuestions,
-        //     numOptions: numOptions,
-        //     examples: examples,
-        //     transcription: String(transcription),
-        //     generatedResult: param.text,
-        //   })
-        //   .returning();
-        // await Promise.all(
-        //   questionTypes.map((type) => {
-        //     return db.insert(listeningQuestionTypesTable).values({
-        //       type: type,
-        //       generationId: ret[0].id,
-        //     });
-        //   })
-        // );
+        await db
+          .insert(listeningClozeGenResultTable)
+          .values({
+            numBlanks: numBlanks,
+            transcript: String(transcript),
+            generatedResult: param.text,
+          })
+          .returning();
       },
     });
 

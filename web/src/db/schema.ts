@@ -44,3 +44,13 @@ export const listeningQuestionTypesTable = pgTable("listening_question_types", {
       onUpdate: "cascade",
     }),
 });
+
+export const listeningClozeGenResultTable = pgTable(
+  "listening_cloze_gen_result",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    numBlanks: smallint("num_blanks").notNull(),
+    transcript: text("transcript").notNull(),
+    generatedResult: text("generated_result").default(""),
+  }
+);
