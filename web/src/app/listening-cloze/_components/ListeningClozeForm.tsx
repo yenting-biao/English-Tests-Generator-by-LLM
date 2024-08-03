@@ -85,9 +85,6 @@ export function ListeningClozeForm({
     try {
       const res = await fetch("/api/listening-cloze", {
         method: "POST",
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
         body: formData,
       });
       if (res.status === 400) {

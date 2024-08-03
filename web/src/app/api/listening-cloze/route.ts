@@ -39,18 +39,16 @@ export async function POST(req: NextRequest) {
     transcript = await getTranscription(audioFile);
   }
   console.log("Transcription:\n", transcript);
+  console.log("Number of blanks:", numBlanks);
 
   const messages: Message[] = [
     {
       role: "system",
       content: `
-      You are an English teacher skilled in designing listening cloze tests for English learners at various proficiency levels. A listening cloze test involves a passage with certain words removed, requiring students to fill in the blanks with the words they listen in the audio. For each blank, you should underline the blank and put a serial number in the middle of the blank, and provide multiple options for students to choose from.
-      You will be given a passage of text and the number of blanks. Please choose the appropriate words to remove from the passage so that the blanks are challenging to evaluate the students' listening skills. 
-      
-      To ensure an effective cloze test, it should be challenging and meet the following criteria:
+      You are an English expert. You are good at finding the most important and difficult words or phrases in a transcript.
 
-      1. **Contextual coherence**: The passage should remain coherent and meaningful even with the blanks, enabling students to infer the missing words from the context.
-      2. **Variety of blanks**: The removed words should include a mix of parts of speech (e.g., vocabulary, phrases, conjunctions, grammar, etc) to assess a range of language skills.
+      You should output the transcript with these important and difficult words or phrases replaced by blanks, and number the blanks like this: \`__(blank number)__\`. However, you should not choose the same word or phrase multiple times. You should not choose proper nouns, including names, places, companies, and so on.
+      Also, you should output these words or phrases below the transcript.
       `,
     },
     {
@@ -119,17 +117,7 @@ function getPrompt(
   transcript: string | OpenAI.Audio.Transcriptions.Transcription
 ) {
   return `
-  Please generate a cloze test of the given passage with ${numBlanks} blanks (note that the blanks should look like this: __(number)__), and output each cloze test in the following format (note that the words in the brackets, "[" and "]", are placeholders and should be replaced with the actual content):
-    
-  Cloze Test:
-  [The passage with blanks]
-  
-  Answers:
-  1. ([Answer 1])
-  2. ([Answer 2])
-  ...(Other answers)
-
-  Below is the passage, please remove ${numBlanks} meaningful and challenging words from the passage:
+  Please find the top ${numBlanks} most important and difficult words or phrases in the following transcript, and output in the desired format.
   ${transcript}
   `;
 }
