@@ -184,14 +184,14 @@ function NumQuestionsField({
       name="numQuestions"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Number of Questions</FormLabel>
+          <FormLabel>Number of Blanks</FormLabel>
           <Select
             onValueChange={(value) => field.onChange(Number(value))}
             defaultValue={field.value.toString()}
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select the number of questions." />
+                <SelectValue placeholder="Select the number of blanks." />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
@@ -203,7 +203,7 @@ function NumQuestionsField({
             </SelectContent>
           </Select>
           <FormDescription>
-            Select the number of questions to generate.
+            Select the number of blanks in the passage.
           </FormDescription>
           <FormMessage />
         </FormItem>
