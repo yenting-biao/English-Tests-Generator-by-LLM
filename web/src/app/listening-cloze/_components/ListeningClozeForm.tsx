@@ -49,7 +49,10 @@ export function ListeningClozeForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // The form values are type-safe and validated.
     console.log(values);
-    if (values.transcript === "" && values.audioFile === undefined) {
+    if (
+      (values.transcript === "" || values.transcript === undefined) &&
+      values.audioFile === undefined
+    ) {
       toast({
         variant: "destructive",
         title: "Your form is incomplete.",
