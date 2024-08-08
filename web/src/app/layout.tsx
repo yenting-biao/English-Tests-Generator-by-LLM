@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fontSans.variable}>
-        <div className="min-h-screen bg-background font-sans antialiased flex flex-col items-center p-8">
+        <div className="min-h-dvh bg-background font-sans antialiased flex flex-col items-center p-8">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
