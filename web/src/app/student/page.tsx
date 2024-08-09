@@ -1,4 +1,3 @@
-import Profile from "./_components/Profile";
 import TestPreview from "./_components/TestPreview";
 import {
   Accordion,
@@ -17,9 +16,6 @@ type Test = {
 };
 
 export default function StudentPage() {
-  const studentId = "B13902999";
-  const studentName = "王小明";
-  const classNumber = "10";
   const openingTests: Test[] = Array.from({ length: 3 }).map((_, i) => ({
     id: `${i}-fsghl9f`,
     name: `Test ${i}`,
@@ -35,22 +31,15 @@ export default function StudentPage() {
   }));
 
   return (
-    <div className="flex flex-col md:flex-row h-full w-full max-w-3xl gap-2 md:gap-10">
-      <Profile
-        studentId={studentId}
-        name={studentName}
-        classNumber={classNumber}
-      />
-      <Accordion
-        type="multiple"
-        defaultValue={["Opening Tests"]}
-        className="w-full"
-      >
-        <TestsDashboard title="Opening Tests" tests={openingTests} />
-        <TestsDashboard title="Incoming Tests" tests={[]} />
-        <TestsDashboard title="History Tests" tests={historyTests} />
-      </Accordion>
-    </div>
+    <Accordion
+      type="multiple"
+      defaultValue={["Opening Tests"]}
+      className="w-full"
+    >
+      <TestsDashboard title="Opening Tests" tests={openingTests} />
+      <TestsDashboard title="Incoming Tests" tests={[]} />
+      <TestsDashboard title="History Tests" tests={historyTests} />
+    </Accordion>
   );
 }
 
