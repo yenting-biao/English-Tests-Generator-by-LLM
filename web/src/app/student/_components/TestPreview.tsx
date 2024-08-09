@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { CalendarCheck2, CheckCheck, CircleAlert } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type TestPreviewProps = {
   id: string;
@@ -64,13 +65,17 @@ export default function TestPreview({
             Not submitted.
           </p>
         )}
-        <Button
-          className="px-4 p-2 disabled:cursor-not-allowed"
-          asChild
-          disabled={submitted}
+        <Link
+          href={`\\student\\tests\\${id}`}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "px-4 p-2",
+            (submitted || new Date() > new Date(endTimestamp)) &&
+              "pointer-events-none opacity-50"
+          )}
         >
-          <Link href={`\\tests\\${id}`}>Take the test.</Link>
-        </Button>
+          Take the test.
+        </Link>
       </CardFooter>
     </Card>
   );
