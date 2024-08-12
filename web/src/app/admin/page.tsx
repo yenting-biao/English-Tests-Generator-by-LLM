@@ -8,14 +8,14 @@ export default function Home() {
         English Tests Generator
       </h1>
       <div className="max-w-xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-14 mx-auto">
-        <StyledLink href="/reading-comprehension">
+        <StyledLink href="/admin/reading-comprehension">
           Reading Comprehension
         </StyledLink>
-        <StyledLink href="/listening-comprehension">
+        <StyledLink href="/admin/listening-comprehension">
           Listening Comprehension
         </StyledLink>
-        <StyledLink href="/cloze">Cloze</StyledLink>
-        <StyledLink href="/listening-cloze">Listening Cloze</StyledLink>
+        <StyledLink href="/admin/cloze">Cloze</StyledLink>
+        <StyledLink href="/admin/listening-cloze">Listening Cloze</StyledLink>
       </div>
     </div>
   );

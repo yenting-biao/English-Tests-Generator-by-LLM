@@ -1,6 +1,6 @@
 "use client";
 
-import { ReadingForm } from "@/app/reading-comprehension/_components/ReadingForm";
+import { ReadingForm } from "@/app/admin/reading-comprehension/_components/ReadingForm";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Check, Copy } from "lucide-react";
