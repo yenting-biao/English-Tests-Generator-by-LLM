@@ -1,14 +1,21 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Client } from "pg";
-
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import { privateEnv } from "@/lib/validators/env";
-
 import * as schema from "./schema";
 
-const client = new Client({
-  connectionString: privateEnv.POSTGRES_URL,
-  connectionTimeoutMillis: 5000,
+const connection = await mysql.createConnection({
+  host: privateEnv.MYSQL_HOST,
+  user: privateEnv.MYSQL_USER,
+  password: privateEnv.MYSQL_PASSWORD,
+  database: privateEnv.MYSQL_DB,
 });
 
-await client.connect();
-export const db = drizzle(client, { schema });
+export const db = drizzle(connection, { schema, mode: "default" });
+
+// const client = new Client({
+//   connectionString: privateEnv.POSTGRES_URL,
+//   connectionTimeoutMillis: 5000,
+// });
+
+// await client.connect();
+// export const db = drizzle(client, { schema });

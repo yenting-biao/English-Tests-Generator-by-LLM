@@ -1,7 +1,8 @@
-import { pgTable, smallint, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { mysqlTable, smallint, text, varchar } from "drizzle-orm/mysql-core";
+import { v4 as uuidv4 } from "uuid";
 
-export const readingGenResultTable = pgTable("reading_gen_result", {
-  id: uuid("id").primaryKey().defaultRandom(),
+export const readingGenResultTable = mysqlTable("reading_comp", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   difficulty: smallint("difficulty").notNull(),
   numQuestions: smallint("num_questions").notNull(),
   numOptions: smallint("num_options").notNull(),
@@ -12,10 +13,10 @@ export const readingGenResultTable = pgTable("reading_gen_result", {
   generatedResult: text("generated_result").default(""),
 });
 
-export const readingQuestionTypesTable = pgTable("question_types", {
-  id: uuid("id").primaryKey().defaultRandom(),
+export const readingQuestionTypesTable = mysqlTable("reading_qtypes", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   type: smallint("type").notNull(),
-  generationId: uuid("generation_id")
+  generationId: varchar("generation_id", { length: 36 })
     .notNull()
     .references(() => readingGenResultTable.id, {
       onDelete: "cascade",
@@ -23,8 +24,8 @@ export const readingQuestionTypesTable = pgTable("question_types", {
     }),
 });
 
-export const listeningGenResultTable = pgTable("listening_gen_result", {
-  id: uuid("id").primaryKey().defaultRandom(),
+export const listeningGenResultTable = mysqlTable("listening_comp", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   url: text("url").notNull(),
   difficulty: smallint("difficulty").notNull(),
   numQuestions: smallint("num_questions").notNull(),
@@ -34,21 +35,24 @@ export const listeningGenResultTable = pgTable("listening_gen_result", {
   generatedResult: text("generated_result").default(""),
 });
 
-export const listeningQuestionTypesTable = pgTable("listening_question_types", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  type: smallint("type").notNull(),
-  generationId: uuid("generation_id")
-    .notNull()
-    .references(() => listeningGenResultTable.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-});
-
-export const listeningClozeGenResultTable = pgTable(
-  "listening_cloze_gen_result",
+export const listeningQuestionTypesTable = mysqlTable(
+  "listening_comp_qtypes",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+    type: smallint("type").notNull(),
+    generationId: varchar("generation_id", { length: 36 })
+      .notNull()
+      .references(() => listeningGenResultTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  }
+);
+
+export const listeningClozeGenResultTable = mysqlTable(
+  "listening_cloze",
+  {
+    id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
     numBlanks: smallint("num_blanks").notNull(),
     transcript: text("transcript").notNull(),
     generatedResult: text("generated_result").default(""),

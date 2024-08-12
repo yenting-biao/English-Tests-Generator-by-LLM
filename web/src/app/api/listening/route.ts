@@ -148,7 +148,8 @@ export async function POST(req: NextRequest) {
             transcription: String(transcription),
             generatedResult: param.text,
           })
-          .returning();
+          .$returningId();
+          
 
         await Promise.all(
           questionTypes.map((type) => {

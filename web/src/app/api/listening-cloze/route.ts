@@ -77,7 +77,6 @@ export async function POST(req: NextRequest) {
             transcript: String(transcript),
             generatedResult: param.text,
           })
-          .returning();
       },
     });
 
