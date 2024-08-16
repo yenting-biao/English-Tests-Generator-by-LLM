@@ -12,6 +12,13 @@ const connection = await mysql.createConnection({
 
 export const db = drizzle(connection, { schema, mode: "default" });
 
+export const studentdb = await mysql.createConnection({
+  host: privateEnv.MYSQL_HOST,
+  user: privateEnv.MYSQL_USER,
+  password: privateEnv.MYSQL_PASSWORD,
+  database: privateEnv.MYSQL_STUDENT_DB,
+});
+
 // const client = new Client({
 //   connectionString: privateEnv.POSTGRES_URL,
 //   connectionTimeoutMillis: 5000,

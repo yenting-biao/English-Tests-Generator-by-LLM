@@ -149,7 +149,6 @@ export async function POST(req: NextRequest) {
             generatedResult: param.text,
           })
           .$returningId();
-          
 
         await Promise.all(
           questionTypes.map((type) => {

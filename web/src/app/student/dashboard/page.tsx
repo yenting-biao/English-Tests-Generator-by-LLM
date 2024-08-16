@@ -1,4 +1,4 @@
-import TestPreview from "./_components/TestPreview";
+import TestPreview from "../_components/TestPreview";
 import {
   Accordion,
   AccordionContent,
