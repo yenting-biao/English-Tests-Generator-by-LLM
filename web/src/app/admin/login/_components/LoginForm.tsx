@@ -38,14 +38,16 @@ export default function LoginForm() {
           "Login failed. Please make sure you have entered the correct username and password."
         );
       } else {
-        alert("Login successful");
         router.push("/admin");
       }
     });
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 max-w-md mx-auto"
+      >
         <FormField
           control={form.control}
           name="username"

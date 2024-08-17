@@ -9,10 +9,10 @@ export default async function Home() {
 
   return (
     <div className="my-auto w-full">
-      <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight leading-relaxed lg:text-6xl text-center">
-        English Tests Generator
-      </h1>
-      <div className="max-w-xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-14 mx-auto">
+      <h5 className="text-2xl text-center font-medium mt-20">
+        Select the type of test you want to generate.
+      </h5>
+      <div className="max-w-xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mx-auto">
         <StyledLink href="/admin/reading-comprehension">
           Reading Comprehension
         </StyledLink>

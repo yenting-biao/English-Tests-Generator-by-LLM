@@ -9,7 +9,7 @@ export default function ListeningPage() {
   const resultRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="w-full max-w-3xl space-y-4">
+    <div className="w-full max-w-3xl space-y-4 mx-auto">
       <ClozeForm
         streaming={streaming}
         setStreaming={setStreaming}

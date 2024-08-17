@@ -9,8 +9,8 @@ export default async function LoginPage() {
     redirect("/admin");
   }
   return (
-    <div className="mx-auto my-auto">
-      <h1 className="lg:text-5xl mb-5 scroll-m-20 text-4xl font-extrabold tracking-tight leading-relaxed text-center">
+    <div className="pt-40">
+      <h1 className="lg:text-3xl mb-2 scroll-m-20 text-2xl font-extrabold tracking-tight leading-relaxed text-center">
         Admin Login
       </h1>
       <LoginForm />

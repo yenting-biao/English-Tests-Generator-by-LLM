@@ -26,7 +26,7 @@ export default function Home() {
     }
   }, [result]);
   return (
-    <div>
+    <div className="w-full max-w-3xl space-y-4 mx-auto">
       <ReadingForm
         setResult={setResult}
         streaming={streaming}

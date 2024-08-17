@@ -9,7 +9,7 @@ export default function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <h3 className="scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight mb-10">
+      <h3 className="scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight mb-10 text-center">
         Listening Comprehension Tests Generator
       </h3>
       {children}
