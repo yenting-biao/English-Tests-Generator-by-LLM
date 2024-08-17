@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import { ClozeForm } from "./_components/ClozeForm";
 import { Separator } from "@/components/ui/separator";
+import GenerationResult from "../_components/GenerationResult";
 
 export default function ListeningPage() {
   const [streaming, setStreaming] = useState<boolean>(false);
@@ -17,17 +18,11 @@ export default function ListeningPage() {
         setResult={setResult}
       />
       <Separator className="max-w-3xl w-full mt-10" />
-      <div className="max-w-3xl w-full h-dvh py-5 flex flex-col">
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
-          The Generated Cloze Test:
-        </h3>
-        <div
-          className="w-full h-full whitespace-pre-wrap scroll-smooth overflow-y-scroll p-5 border-2 border-black dark:border-neutral-50 rounded-xl"
-          ref={resultRef}
-        >
-          <p>{result}</p>
-        </div>
-      </div>
+      <GenerationResult
+        streaming={streaming}
+        result={result}
+        resultRef={resultRef}
+      />
     </div>
   );
 }
