@@ -1,6 +1,12 @@
 import { mysqlTable, smallint, text, varchar } from "drizzle-orm/mysql-core";
 import { v4 as uuidv4 } from "uuid";
 
+export const adminUserTable = mysqlTable("admin_user", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+  username: varchar("username", { length: 20 }).notNull().unique(),
+  password: varchar("password", { length: 100 }).notNull(),
+});
+
 export const readingGenResultTable = mysqlTable("reading_comp", {
   id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   difficulty: smallint("difficulty").notNull(),
@@ -35,26 +41,20 @@ export const listeningGenResultTable = mysqlTable("listening_comp", {
   generatedResult: text("generated_result").default(""),
 });
 
-export const listeningQuestionTypesTable = mysqlTable(
-  "listening_comp_qtypes",
-  {
-    id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
-    type: smallint("type").notNull(),
-    generationId: varchar("generation_id", { length: 36 })
-      .notNull()
-      .references(() => listeningGenResultTable.id, {
-        onDelete: "cascade",
-        onUpdate: "cascade",
-      }),
-  }
-);
+export const listeningQuestionTypesTable = mysqlTable("listening_comp_qtypes", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+  type: smallint("type").notNull(),
+  generationId: varchar("generation_id", { length: 36 })
+    .notNull()
+    .references(() => listeningGenResultTable.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+});
 
-export const listeningClozeGenResultTable = mysqlTable(
-  "listening_cloze",
-  {
-    id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
-    numBlanks: smallint("num_blanks").notNull(),
-    transcript: text("transcript").notNull(),
-    generatedResult: text("generated_result").default(""),
-  }
-);
+export const listeningClozeGenResultTable = mysqlTable("listening_cloze", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+  numBlanks: smallint("num_blanks").notNull(),
+  transcript: text("transcript").notNull(),
+  generatedResult: text("generated_result").default(""),
+});

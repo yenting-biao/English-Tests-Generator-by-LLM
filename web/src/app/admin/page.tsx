@@ -1,7 +1,12 @@
+import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  if (!session || !session.user) redirect("/admin/login");
+
   return (
     <div className="my-auto w-full">
       <h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight leading-relaxed lg:text-6xl text-center">

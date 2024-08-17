@@ -1,11 +1,14 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "./CredentialsProvider";
+import {
+  studentCreditialsProvider,
+  adminCredentialsProvider,
+} from "./CredentialsProvider";
 
 export const {
   handlers: { GET, POST },
   auth,
 } = NextAuth({
-  providers: [CredentialsProvider],
+  providers: [studentCreditialsProvider, adminCredentialsProvider],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -23,6 +26,6 @@ export const {
     },
   },
   pages: {
-    signIn: "/student/login",
+    signIn: "/auth/signin",
   },
 });
