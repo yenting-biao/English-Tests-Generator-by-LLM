@@ -21,11 +21,11 @@ export default async function TestManagePage() {
   return (
     <div>
       <h1 className="text-3xl font-semibold mb-5">Publish Tests to Classes</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 p-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3">
         {tests &&
           tests.map((test) => (
             <Link href={`/admin/test-manage/${test.id}`} key={test.id}>
-              <Card>
+              <Card className="hover:bg-secondary">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xl">{test.title}</CardTitle>
                 </CardHeader>

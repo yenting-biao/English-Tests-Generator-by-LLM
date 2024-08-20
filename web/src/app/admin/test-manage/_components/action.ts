@@ -15,7 +15,7 @@ export async function getAllGeneratedTests() {
     .select()
     .from(testsTable)
     .where(eq(testsTable.creatorId, session.user.id))
-    .orderBy(desc(testsTable.id));
+    .orderBy(desc(testsTable.createdAt));
   return tests;
 }
 
