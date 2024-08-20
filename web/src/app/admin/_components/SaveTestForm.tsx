@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { usePathname } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 
 export default function SavedTestForm() {
   const path = usePathname();
@@ -45,13 +46,35 @@ export default function SavedTestForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof readingCompSchema>) => {
-    console.log("submit", values);
+    const res = await fetch("/api/tests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (!res.ok) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "Failed to save the test due to server error. Please try again later.",
+        duration: 3000,
+      });
+    } else {
+      toast({
+        variant: "default",
+        title: "Test saved successfully!",
+        description: "The test has been saved for future usage.",
+        duration: 3000,
+      });
+    }
   };
 
   return (
     <div>
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
-        Save the Generated Test and Publish to Students
+        Save the Generated Test and Publish to Students Later
       </h3>
       <Form {...form}>
         <form
@@ -90,7 +113,7 @@ export default function SavedTestForm() {
           />
           <AnswersField form={form} />
           <Button type="submit" className="w-fit">
-            Save and Publish
+            Save to Library
           </Button>
         </form>
       </Form>
