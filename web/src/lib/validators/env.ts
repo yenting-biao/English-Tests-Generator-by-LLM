@@ -8,6 +8,7 @@ const privateEnvSchema = z.object({
   MYSQL_PASSWORD: z.string(),
   MYSQL_DB: z.string(),
   MYSQL_STUDENT_DB: z.string(),
+  ADMIN_USERNAME: z.string(),
 });
 
 type PrivateEnv = z.infer<typeof privateEnvSchema>;
@@ -20,6 +21,7 @@ export const privateEnv: PrivateEnv = {
   MYSQL_PASSWORD: process.env.MYSQL_PASSWORD!,
   MYSQL_DB: process.env.MYSQL_DB!,
   MYSQL_STUDENT_DB: process.env.MYSQL_STUDENT_DB!,
+  ADMIN_USERNAME: process.env.ADMIN_USERNAME!,
 };
 
 privateEnvSchema.parse(privateEnv);

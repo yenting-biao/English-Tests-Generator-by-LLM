@@ -3,13 +3,14 @@ import { readingCompSchema } from "@/lib/validators/saveTest";
 import { db } from "@/db";
 import { testsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { privateEnv } from "@/lib/validators/env";
 
 export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
   const session = await auth();
-  if (!session || session.user.username !== "cmgao_llmgentest_admin") {
+  if (!session || session.user.username !== privateEnv.ADMIN_USERNAME) {
     return NextResponse.json(
       { error: "You are not authorized to save tests" },
       { status: 403 }

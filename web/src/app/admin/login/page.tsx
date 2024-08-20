@@ -1,11 +1,11 @@
 import { auth } from "@/lib/auth";
 import LoginForm from "./_components/LoginForm";
 import { redirect } from "next/navigation";
+import { privateEnv } from "@/lib/validators/env";
 
 export default async function LoginPage() {
   const session = await auth();
-  console.log("admin session", session);
-  if (session && session.user.username === "cmgao_llmgentest_admin") {
+  if (session && session.user.username === privateEnv.ADMIN_USERNAME) {
     redirect("/admin");
   }
   return (
