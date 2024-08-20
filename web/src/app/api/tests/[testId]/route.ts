@@ -4,11 +4,14 @@ import { db } from "@/db";
 import { testsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { privateEnv } from "@/lib/validators/env";
+import { eq, sql } from "drizzle-orm";
 
 export const maxDuration = 30;
 
-export async function POST(req: NextRequest) {
-  const data = await req.json();
+export async function PUT(
+  req: NextRequest,
+  { params: { testId } }: { params: { testId: string } }
+) {
   const session = await auth();
   if (!session || session.user.username !== privateEnv.ADMIN_USERNAME) {
     return NextResponse.json(
@@ -16,6 +19,9 @@ export async function POST(req: NextRequest) {
       { status: 403 }
     );
   }
+
+  // Validate the request body
+  const data = await req.json();
   let title, passage, answers;
   try {
     const validatedData = readingCompSchema.parse(data);
@@ -30,20 +36,43 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Check if the test exists
+  try {
+    const res = await db
+      .select()
+      .from(testsTable)
+      .where(eq(testsTable.id, testId));
+    if (!res[0]) {
+      return NextResponse.json({ error: "Test not found" }, { status: 404 });
+    }
+    if (res[0].creatorId !== session.user.id) {
+      return NextResponse.json(
+        { error: "You are not authorized to edit this test" },
+        { status: 403 }
+      );
+    }
+  } catch (error) {
+    console.log("Error checking if the test exists in db", error);
+    return NextResponse.json(
+      { error: "We cannot check if the test exists" },
+      { status: 500 }
+    );
+  }
+
   // Save the test to the database
   const answerStr = answers.map((answer) => answer.ans).join(",");
-  console.log("answerStr:", answerStr);
   try {
-    await db.insert(testsTable).values({
-      title: title,
-      questions: passage,
-      answers: answerStr,
-      creatorId: session.user.id,
-    });
+    await db.execute(sql`
+      UPDATE tests
+      SET title = ${title},
+          questions = ${passage},
+          answers = ${answerStr}
+      WHERE id = ${testId}
+      `);
   } catch (error) {
-    console.log("Error saving test to the database:", error);
+    console.log("Error saving edited test to the database:", error);
     return NextResponse.json(
-      { error: "We cannot save the test to the database" },
+      { error: "We cannot save the edited test to the database" },
       { status: 500 }
     );
   }

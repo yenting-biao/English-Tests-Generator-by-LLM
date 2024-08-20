@@ -2,6 +2,14 @@ import { auth } from "@/lib/auth";
 import { privateEnv } from "@/lib/validators/env";
 import { redirect } from "next/navigation";
 import { getTestsById } from "../_components/action";
+import TestEditor from "./_components/TestEditor";
+
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 type Props = {
   params: { testId: string };
@@ -20,10 +28,34 @@ export default async function TestsDetailPage({ params: { testId } }: Props) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-semibold mb-5">TestsDetailPage</h1>
-      <p>{testDetail.title}</p>
-      <p className="whitespace-pre-wrap">{testDetail.questions}</p>
-      <p>{testDetail.answers}</p>
+      <Accordion
+        type="single"
+        collapsible
+        defaultValue="test-details"
+        className="w-full"
+      >
+        <AccordionItem value="test-details">
+          <AccordionTrigger className="text-3xl font-semibold">
+            Test Details
+          </AccordionTrigger>
+          <AccordionContent className="text-base">
+            <TestEditor
+              testId={testId}
+              testTitle={testDetail.title}
+              testQuestions={testDetail.questions}
+              testAnswers={testDetail.answers}
+            />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="assigned-classes">
+          <AccordionTrigger className="text-3xl font-semibold">
+            Assigned Classes
+          </AccordionTrigger>
+          <AccordionContent className="text-base">
+            <div>Assigned Classes</div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

@@ -23,10 +23,26 @@ import { readingCompSchema } from "@/lib/validators/saveTest";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
+import React from "react";
 
-export default function SavedTestForm() {
+type Props = {
+  testId?: string;
+  testTitle?: string;
+  testQuestions?: string;
+  testAnswers?: string;
+  setEditing?: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function SavedTestForm({
+  testId,
+  testTitle,
+  testQuestions,
+  testAnswers,
+  setEditing,
+}: Props) {
+  const router = useRouter();
   const path = usePathname();
   const testType = path.split("/")[2];
   const defaultTitle: {
@@ -41,18 +57,31 @@ export default function SavedTestForm() {
   const form = useForm<z.infer<typeof readingCompSchema>>({
     resolver: zodResolver(readingCompSchema),
     defaultValues: {
-      title: defaultTitle[testType],
+      title: testTitle ?? defaultTitle[testType],
+      passage: testQuestions,
+      answers: testAnswers
+        ? testAnswers.split(",").map((ans) => ({ ans: ans }))
+        : [],
     },
   });
 
   const onSubmit = async (values: z.infer<typeof readingCompSchema>) => {
-    const res = await fetch("/api/tests", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
+    const res = testId
+      ? await fetch(`/api/tests/${testId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        })
+      : await fetch("/api/tests", {
+          method: testId ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+
     if (!res.ok) {
       toast({
         variant: "destructive",
@@ -68,14 +97,18 @@ export default function SavedTestForm() {
         description: "The test has been saved for future usage.",
         duration: 3000,
       });
+      router.refresh();
+      if (setEditing) setEditing(false);
     }
   };
 
   return (
     <div>
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
-        Save the Generated Test and Publish to Students Later
-      </h3>
+      {!testId && (
+        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
+          Save the Generated Test and Publish to Students Later
+        </h3>
+      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -143,47 +176,52 @@ function AnswersField({
             <FormField
               control={form.control}
               name={`answers.${answerIndex}.ans`}
-              render={() => (
-                <FormItem>
-                  <div className="flex items-center gap-2">
-                    <FormLabel className="text-lg">
-                      {answerIndex + 1}.
-                    </FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        form.setValue(
-                          `answers.${answerIndex}.ans`,
-                          value as string
-                        );
-                      }}
-                    >
-                      <FormControl className="max-w-80">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Array.from({ length: 5 }, (_, i) => (
-                          <SelectItem
-                            key={i}
-                            value={String.fromCharCode(65 + i)}
-                          >
-                            {String.fromCharCode(65 + i)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <button
-                      className="text-destructive"
-                      onClick={() => removeAnswer(answerIndex)}
-                    >
-                      <CircleMinus size={20} />
-                    </button>
-                  </div>
+              render={() => {
+                const currentValue = form.watch(`answers.${answerIndex}.ans`);
+                console.log("currentValue", currentValue);
+                return (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="text-lg">
+                        {answerIndex + 1}.
+                      </FormLabel>
+                      <Select
+                        value={currentValue}
+                        onValueChange={(value) => {
+                          form.setValue(
+                            `answers.${answerIndex}.ans`,
+                            value as string
+                          );
+                        }}
+                      >
+                        <FormControl className="max-w-80">
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <SelectItem
+                              key={i}
+                              value={String.fromCharCode(65 + i)}
+                            >
+                              {String.fromCharCode(65 + i)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <button
+                        className="text-destructive"
+                        onClick={() => removeAnswer(answerIndex)}
+                      >
+                        <CircleMinus size={20} />
+                      </button>
+                    </div>
 
-                  <FormMessage />
-                </FormItem>
-              )}
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           </div>
         ))}
