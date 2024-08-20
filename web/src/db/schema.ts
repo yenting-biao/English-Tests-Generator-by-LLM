@@ -48,6 +48,7 @@ export const testsTable = mysqlTable("tests", {
   title: varchar("title", { length: 100 }).notNull(),
   questions: text("questions").notNull(),
   answers: text("answers").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const assignedTestsTable = mysqlTable("assigned_tests", {
