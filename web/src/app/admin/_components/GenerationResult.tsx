@@ -35,7 +35,7 @@ export default function GenerationResult({
         The Generated Result:
       </h3>
       <div
-        className="w-full h-full whitespace-pre-wrap scroll-smooth overflow-y-scroll p-5 border-2 border-black dark:border-neutral-50 rounded-xl"
+        className="w-full h-full whitespace-pre-wrap scroll-smooth overflow-y-scroll p-5 border border-border rounded-xl"
         ref={resultRef}
       >
         <p>{result}</p>

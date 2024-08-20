@@ -2,8 +2,9 @@
 
 import { ReadingForm } from "@/app/admin/reading-comprehension/_components/ReadingForm";
 import { Separator } from "@/components/ui/separator";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import GenerationResult from "../_components/GenerationResult";
+import SavedTestForm from "../_components/SaveTestForm";
 
 export default function Home() {
   const [result, setResult] = useState<string>("");
@@ -24,6 +25,7 @@ export default function Home() {
         streaming={streaming}
         resultRef={resultRef}
       />
+      <SavedTestForm />
     </div>
   );
 }

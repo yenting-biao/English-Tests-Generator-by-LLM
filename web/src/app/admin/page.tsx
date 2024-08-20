@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <div className="my-auto w-full">
       <h5 className="text-2xl text-center font-medium mt-20">
-        Select the type of test you want to generate.
+        Generate new tests:
       </h5>
       <div className="max-w-xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mx-auto">
         <StyledLink href="/admin/reading-comprehension">
@@ -21,6 +21,11 @@ export default async function Home() {
         </StyledLink>
         <StyledLink href="/admin/cloze">Cloze</StyledLink>
         <StyledLink href="/admin/listening-cloze">Listening Cloze</StyledLink>
+      </div>
+      <h5 className="text-2xl text-center font-medium mt-20">Manage tests:</h5>
+      <div className="mx-auto mt-10 text-center">
+        This is the div to manage tests, such as showing the list of tests and
+        manage different classes&apos; test.
       </div>
     </div>
   );

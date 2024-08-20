@@ -96,7 +96,7 @@ export function ReadingForm({
       const reader = res.body.getReader();
       let count = 0;
       let result = "";
-      while (true) {
+      while (count <= 2048) {
         const { done, value } = await reader.read();
         if (done) {
           break;
@@ -104,9 +104,6 @@ export function ReadingForm({
         result += new TextDecoder().decode(value);
         setResult(result);
         count++;
-        if (count > 2048) {
-          break;
-        }
       }
     } catch (error) {
       console.error(error);
@@ -373,7 +370,7 @@ function QuestionTypesField({
     <FormField
       control={form.control}
       name="questionTypes"
-      render={({ field }) => (
+      render={() => (
         <FormItem>
           <div className="mb-2">
             <FormLabel>Question Types</FormLabel>
