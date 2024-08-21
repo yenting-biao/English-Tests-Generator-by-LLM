@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,8 +25,6 @@ export default function LoginForm() {
   const router = useRouter();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     signIn("admin-credentials", {
       username: values.username,
       password: values.password,

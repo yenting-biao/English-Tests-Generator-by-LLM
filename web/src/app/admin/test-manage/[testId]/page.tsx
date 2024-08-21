@@ -1,7 +1,11 @@
 import { auth } from "@/lib/auth";
 import { privateEnv } from "@/lib/validators/env";
 import { redirect } from "next/navigation";
-import { getTestsById } from "../_components/action";
+import {
+  getAllClasses,
+  getTestAssignedClasses,
+  getTestsById,
+} from "../_components/action";
 import TestEditor from "./_components/TestEditor";
 
 import {
@@ -10,6 +14,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import AssignedClass from "./_components/AssignedClass";
 
 type Props = {
   params: { testId: string };
@@ -25,13 +30,23 @@ export default async function TestsDetailPage({ params: { testId } }: Props) {
   if (!testDetail) {
     return <div>Test not found</div>;
   }
+  const allClasses = await getAllClasses();
+  const assignedClasses = await getTestAssignedClasses(testId);
+  // map class id to class name
+  const classNameDict = allClasses
+    ? allClasses.reduce((acc, cur) => {
+        acc[cur.id] = cur.name;
+        return acc;
+      }, {} as { [key: number]: string })
+    : {};
+  // console.log("classNameDict", classNameDict);
 
   return (
     <div className="space-y-4">
       <Accordion
         type="single"
         collapsible
-        defaultValue="test-details"
+        //defaultValue="test-details"
         className="w-full"
       >
         <AccordionItem value="test-details">
@@ -52,7 +67,11 @@ export default async function TestsDetailPage({ params: { testId } }: Props) {
             Assigned Classes
           </AccordionTrigger>
           <AccordionContent className="text-base">
-            <div>Assigned Classes</div>
+            <AssignedClass
+              testId={testId}
+              classNameDict={classNameDict}
+              assignedClasses={assignedClasses ?? []}
+            />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
