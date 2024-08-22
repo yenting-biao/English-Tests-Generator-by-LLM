@@ -5,6 +5,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { getOpeningTests } from "./_components/action";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { format } from "date-fns";
 
 type Test = {
   id: string;
@@ -15,7 +19,22 @@ type Test = {
   endTimestamp: string;
 };
 
-export default function StudentPage() {
+export default async function StudentPage() {
+  const session = await auth();
+  if (!session || !session.user) redirect("/student/login");
+
+  const newOpeningTests: Test[] = (
+    await getOpeningTests(session.user.classNumber)
+  ).map((test) => {
+    return {
+      id: test.testId,
+      name: test.testTitle,
+      description: "testDescription",
+      submitted: false,
+      startTimestamp: format(test.startDate, "yyyy/MM/dd hh:mm:ss a"),
+      endTimestamp: format(test.endDate, "yyyy/MM/dd hh:mm:ss a"),
+    };
+  });
   const openingTests: Test[] = Array.from({ length: 3 }).map((_, i) => ({
     id: `${i}-fsghl9f`,
     name: `Test ${i}`,
@@ -36,7 +55,7 @@ export default function StudentPage() {
       defaultValue={["Opening Tests"]}
       className="w-full"
     >
-      <TestsDashboard title="Opening Tests" tests={openingTests} />
+      <TestsDashboard title="Opening Tests" tests={newOpeningTests} />
       <TestsDashboard title="Incoming Tests" tests={[]} />
       <TestsDashboard title="History Tests" tests={historyTests} />
     </Accordion>

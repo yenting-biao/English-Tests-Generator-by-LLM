@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
   const session = await auth();
-  if (session && session.user) redirect("/student");
+  if (session && session.user) redirect("/student/dashboard");
 
   return (
     <div className="mx-auto my-auto">

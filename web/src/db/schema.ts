@@ -65,6 +65,18 @@ export const assignedTestsTable = mysqlTable("assigned_tests", {
   endDate: timestamp("end_date").notNull(),
 });
 
+export const submittedTestsTable = mysqlTable("submitted_test", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+  studentId: varchar("student_id", { length: 36 }).notNull(),
+  testId: varchar("test_id", { length: 36 })
+    .notNull()
+    .references(() => testsTable.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  submittedAnswers: text("submitted_answers").notNull(),
+});
+
 export const listeningGenResultTable = mysqlTable("listening_comp", {
   id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   url: text("url").notNull(),
