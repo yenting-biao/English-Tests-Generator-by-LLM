@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { ListeningForm } from "./_components/ListeningForm";
 import { Separator } from "@/components/ui/separator";
 import GenerationResult from "../_components/GenerationResult";
+import SavedTestForm from "../_components/SaveTestForm";
 
 export default function ListeningPage() {
   const [streaming, setStreaming] = useState<boolean>(false);
@@ -23,6 +24,7 @@ export default function ListeningPage() {
         result={result}
         resultRef={resultRef}
       />
+      <SavedTestForm />
     </div>
   );
 }
