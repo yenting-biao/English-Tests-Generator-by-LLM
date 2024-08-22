@@ -2,6 +2,7 @@ import { CalendarCheck2, CircleCheckBig } from "lucide-react";
 import { getSubmitRecord, getTestById } from "./_components/action";
 import TestSubmissionForm from "./_components/TestSubmissionForm";
 import { format } from "date-fns";
+import LinkifyTestQuestions from "./_components/TestQuestions";
 
 type Props = {
   params: { id: string };
@@ -17,14 +18,14 @@ export default async function TestsPage({ params: { id } }: Props) {
 
   return (
     <div className="flex flex-col gap-5 max-w-3xl">
-      <div className="flex flex-col gap-2 md:gap-0 md:flex-row md:justify-between  md:items-end">
+      <div className="flex flex-col gap-2 ">
         <h1 className="text-2xl font-bold">
           {testDetails.title}
           {submitRecord ? (
             <>
               <CircleCheckBig
                 size={20}
-                className="inline-block ml-2 mr-1 text-green-500"
+                className="inline-block ml-3 mr-1 text-green-500"
               />
               <span className="text-green-500 text-sm inline-block font-normal">
                 Submitted!
@@ -37,9 +38,7 @@ export default async function TestsPage({ params: { id } }: Props) {
           Deadline: {format(testDetails.deadline, "yyyy/MM/dd HH:mm")}
         </p>
       </div>
-      <p className="whitespace-pre-wrap text-justify">
-        {testDetails.questions}
-      </p>
+      <LinkifyTestQuestions questions={testDetails.questions} />
       <TestSubmissionForm
         numBlanks={testDetails.numAns}
         testId={id}

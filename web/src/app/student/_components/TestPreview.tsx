@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CalendarCheck2, CheckCheck, CircleAlert } from "lucide-react";
+import { CalendarCheck2, CircleAlert, CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +54,7 @@ export default function TestPreview({
       <CardFooter className="flex justify-between p-4 pt-0">
         {submitted ? (
           <p className="text-green-600">
-            <CheckCheck size={16} className="inline-block mr-1" />
+            <CircleCheckBig size={16} className="inline-block mr-1" />
             Submitted!
           </p>
         ) : (
@@ -68,12 +68,14 @@ export default function TestPreview({
           href={`\\student\\tests\\${id}`}
           className={cn(
             buttonVariants({ variant: "default" }),
-            "px-4 p-2",
-            (submitted || new Date() > new Date(endTimestamp)) &&
-              "pointer-events-none opacity-50"
+            "px-4 p-2"
+            // (submitted || new Date() > new Date(endTimestamp)) &&
+            //   "pointer-events-none opacity-50"
           )}
         >
-          Take the test.
+          {submitted || new Date() > new Date(endTimestamp)
+            ? "View the test."
+            : "Take the test."}
         </Link>
       </CardFooter>
     </Card>
