@@ -75,6 +75,7 @@ export const submittedTestsTable = mysqlTable("submitted_test", {
       onUpdate: "cascade",
     }),
   submittedAnswers: text("submitted_answers").notNull(),
+  submittedTimestamp: timestamp("submitted_timestamp").notNull().defaultNow(),
 });
 
 export const listeningGenResultTable = mysqlTable("listening_comp", {

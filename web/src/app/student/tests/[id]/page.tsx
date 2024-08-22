@@ -14,6 +14,7 @@ export default async function TestsPage({ params: { id } }: Props) {
     return <div>Test not found</div>;
   }
   const testDetails = tests[0];
+
   return (
     <div className="flex flex-col gap-5 max-w-3xl">
       <div className="flex flex-col gap-2 md:gap-0 md:flex-row md:justify-between  md:items-end">
@@ -33,7 +34,7 @@ export default async function TestsPage({ params: { id } }: Props) {
         </h1>
         <p className="text-base">
           <CalendarCheck2 size={20} className="inline-block mr-2" />
-          Deadline: {format(testDetails.deadline, "yyyy/MM/dd hh:mm:ss a")}
+          Deadline: {format(testDetails.deadline, "yyyy/MM/dd HH:mm")}
         </p>
       </div>
       <p className="whitespace-pre-wrap text-justify">

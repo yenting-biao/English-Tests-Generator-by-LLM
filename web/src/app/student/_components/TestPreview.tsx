@@ -38,7 +38,6 @@ export default function TestPreview({
       day: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
-      second: "numeric",
       hour12: false,
     });
   return (
@@ -51,7 +50,7 @@ export default function TestPreview({
           {formattedTimeStamp(endTimestamp)}
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-4 pt-0">{description}</CardContent>
+      {/* <CardContent className="p-4 pt-0">{description}</CardContent> */}
       <CardFooter className="flex justify-between p-4 pt-0">
         {submitted ? (
           <p className="text-green-600">

@@ -8,6 +8,9 @@ import { auth } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
 
 export async function getTestById(testId: string) {
+  const session = await auth();
+  if (!session || !session.user) return null;
+
   const res = await db
     .select({
       title: testsTable.title,
@@ -17,7 +20,12 @@ export async function getTestById(testId: string) {
     })
     .from(testsTable)
     .innerJoin(assignedTestsTable, eq(testsTable.id, assignedTestsTable.testId))
-    .where(eq(testsTable.id, testId))
+    .where(
+      and(
+        eq(testsTable.id, testId),
+        eq(assignedTestsTable.classNumber, session.user.classNumber)
+      )
+    )
     .execute();
 
   if (!res || res.length === 0) return null;
