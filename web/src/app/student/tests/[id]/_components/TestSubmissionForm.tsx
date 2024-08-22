@@ -17,25 +17,31 @@ import { Input } from "@/components/ui/input";
 import { studentSubmitTestSchema as formSchema } from "@/lib/validators/studentTest";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-
-interface TestSubmissionFormProps {
-  numBlanks: number;
-  testId: string;
-}
+import { useRouter } from "next/navigation";
 
 const submitTestResponseSchema = z.object({
   showAnswers: z.boolean(),
   answers: z.array(z.string()),
 });
 
+interface TestSubmissionFormProps {
+  numBlanks: number;
+  testId: string;
+  disable: boolean;
+  submittedAnswers?: string[];
+}
+
 export default function TestSubmissionForm({
   numBlanks,
   testId,
+  disable,
+  submittedAnswers,
 }: TestSubmissionFormProps) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      blanks: Array(numBlanks).fill(""),
+      blanks: submittedAnswers,
     },
   });
 
@@ -94,7 +100,6 @@ export default function TestSubmissionForm({
 
       if (validatedData.data.showAnswers) {
         const answers = validatedData.data.answers;
-
         toast({
           variant: "default",
           title: "Test submitted successfully!",
@@ -108,6 +113,8 @@ export default function TestSubmissionForm({
             "Answers of this test are hidden. Please wait for the instructor to reveal them.",
         });
       }
+
+      router.refresh();
     } catch (error) {
       console.error("error", error);
       toast({
@@ -132,14 +139,16 @@ export default function TestSubmissionForm({
               <FormItem>
                 <FormLabel>Question {index + 1}.</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} disabled={disable} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         ))}
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={disable}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

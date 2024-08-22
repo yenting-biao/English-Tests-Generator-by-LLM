@@ -1,6 +1,11 @@
 import { db } from "@/db";
-import { assignedTestsTable, testsTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  assignedTestsTable,
+  submittedTestsTable,
+  testsTable,
+} from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { and, eq } from "drizzle-orm";
 
 export async function getTestById(testId: string) {
   const res = await db
@@ -31,4 +36,27 @@ export async function getTestById(testId: string) {
     };
   });
   return ret;
+}
+
+export async function getSubmitRecord(testId: string) {
+  const session = await auth();
+  if (!session || !session.user) return null;
+
+  const res = await db
+    .select({
+      submittedAnswers: submittedTestsTable.submittedAnswers,
+      submittedTimestamp: submittedTestsTable.submittedTimestamp,
+    })
+    .from(submittedTestsTable)
+    .where(
+      and(
+        eq(submittedTestsTable.studentId, session.user.id),
+        eq(submittedTestsTable.testId, testId)
+      )
+    )
+    .execute();
+
+  if (!res || res.length === 0) return null;
+
+  return res[0];
 }
