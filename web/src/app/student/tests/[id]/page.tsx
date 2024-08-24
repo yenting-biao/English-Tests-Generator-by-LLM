@@ -1,4 +1,4 @@
-import { CalendarCheck2, CircleCheckBig } from "lucide-react";
+import { CalendarCheck2, CircleAlert, CircleCheckBig } from "lucide-react";
 import { getSubmitRecord, getTestById } from "./_components/action";
 import TestSubmissionForm from "./_components/TestSubmissionForm";
 import { format } from "date-fns";
@@ -31,7 +31,17 @@ export default async function TestsPage({ params: { id } }: Props) {
                 Submitted!
               </span>
             </>
-          ) : null}
+          ) : (
+            <>
+              <CircleAlert
+                size={16}
+                className="inline-block ml-3 mr-1 text-red-500"
+              />
+              <span className="text-red-500 text-sm inline-block font-normal">
+                Not submitted.
+              </span>
+            </>
+          )}
         </h1>
         <p className="text-base">
           <CalendarCheck2 size={20} className="inline-block mr-2" />

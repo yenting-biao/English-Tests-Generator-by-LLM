@@ -1,11 +1,17 @@
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { privateEnv } from "@/lib/validators/env";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
-  if (!session || !session.user) redirect("/admin/login");
+  if (
+    !session ||
+    !session.user ||
+    session.user.username !== privateEnv.ADMIN_USERNAME
+  )
+    redirect("/admin/login");
 
   return (
     <div className="my-auto w-full">

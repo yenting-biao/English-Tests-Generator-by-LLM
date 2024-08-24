@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readingComprehensionSchema } from "@/lib/validators/genQA";
+import {
+  readingComprehensionSchema,
+  readingCompResultSchema,
+} from "@/lib/validators/genQA";
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { streamObject, streamText } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
@@ -103,6 +106,19 @@ export async function POST(req: NextRequest) {
       apiKey: privateEnv.OPENAI_API_KEY,
       compatibility: "strict",
     });
+
+    const objectResult = await streamObject({
+      model: openai("gpt-4o-mini"),
+      messages: messages,
+      maxTokens: 8192,
+      temperature: 0.3,
+      schema: readingCompResultSchema,
+      onFinish: async (object) => {
+        console.log("finish object:", object);
+      },
+    });
+
+    return objectResult.toTextStreamResponse();
 
     const result = await streamText({
       model: openai("gpt-4o-mini"),

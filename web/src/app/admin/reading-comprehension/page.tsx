@@ -1,30 +1,32 @@
 "use client";
 
-import { ReadingForm } from "@/app/admin/reading-comprehension/_components/ReadingForm";
 import { Separator } from "@/components/ui/separator";
-import { useRef, useState } from "react";
-import GenerationResult from "../_components/GenerationResult";
+import { useRef } from "react";
 import SavedTestForm from "../_components/SaveTestForm";
+import { readingCompResultSchema } from "@/lib/validators/genQA";
+import ReadingForm from "./_components/ReadingForm";
+import { experimental_useObject as useObject } from "ai/react";
+import GenResult from "../_components/GenResult";
 
 export default function Home() {
-  const [result, setResult] = useState<string>("");
-  const [streaming, setStreaming] = useState<boolean>(false);
   const resultRef = useRef<HTMLDivElement | null>(null);
+
+  const { submit, isLoading, object } = useObject({
+    api: "/api/reading",
+    schema: readingCompResultSchema,
+    onFinish({ object }) {
+      // if (object != null) {
+      //   setObjectResult(object);
+      // }
+      console.log("onFinish", object);
+    },
+  });
 
   return (
     <div className="w-full max-w-3xl space-y-4 mx-auto">
-      <ReadingForm
-        setResult={setResult}
-        streaming={streaming}
-        setStreaming={setStreaming}
-        resultRef={resultRef}
-      />
+      <ReadingForm submit={submit} isLoading={isLoading} />
       <Separator className="max-w-3xl w-full mt-10" />
-      <GenerationResult
-        result={result}
-        streaming={streaming}
-        resultRef={resultRef}
-      />
+      <GenResult passage={object?.passage} questions={object?.questions} />
       <SavedTestForm />
     </div>
   );

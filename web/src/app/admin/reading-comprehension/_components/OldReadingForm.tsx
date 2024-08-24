@@ -29,13 +29,17 @@ import { questionTypes } from "@/lib/constants/questionTypes";
 import React from "react";
 import { useToast } from "@/components/ui/use-toast";
 
-type Props = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submit: (input: any) => void;
-  isLoading: boolean;
-};
-
-export default function ReadingForm({ submit, isLoading }: Props) {
+export function ReadingForm({
+  setResult,
+  streaming,
+  setStreaming,
+  resultRef,
+}: {
+  setResult: React.Dispatch<React.SetStateAction<string>>;
+  streaming: boolean;
+  setStreaming: React.Dispatch<React.SetStateAction<boolean>>;
+  resultRef: React.MutableRefObject<HTMLDivElement | null>;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,20 +56,61 @@ export default function ReadingForm({ submit, isLoading }: Props) {
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    // The form values are type-safe and validated.
+    setStreaming(true);
+
     try {
-      submit(values);
-    } catch (error) {
-      console.error(
-        "An error occurred when submitting request and streaming: " + error
-      );
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
+      const res = await fetch("/api/reading", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
+      if (res.status === 400) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Please make sure the form is filled correctly.",
+          duration: 3000,
+        });
+        return;
+      } else if (!res.ok || !res.body) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "Failed to generate questions due to server error. Please try again later.",
+          duration: 3000,
+        });
+        return;
+      }
+
+      setResult("");
+      resultRef.current?.scrollIntoView({
+        behavior: "auto",
+        block: "start",
+        inline: "nearest",
+      });
+
+      const reader = res.body.getReader();
+      let count = 0;
+      let result = "";
+      while (count <= 2048) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
+        }
+        result += new TextDecoder().decode(value);
+        setResult(result);
+        count++;
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setStreaming(false);
     }
   };
-
   return (
     <Form {...form}>
       <form
@@ -89,7 +134,7 @@ export default function ReadingForm({ submit, isLoading }: Props) {
         <Button
           type="submit"
           className="w-fit md:col-span-2 disabled:cursor-not-allowed"
-          disabled={isLoading}
+          disabled={streaming}
         >
           Generate!
         </Button>

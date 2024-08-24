@@ -1,5 +1,6 @@
 import z from "zod";
 
+// genQA input form
 const baseSchema = z.object({
   difficulty: z
     .number()
@@ -79,3 +80,19 @@ export const listeningClozeSchema = z.object({
   transcript: z.string().optional(),
   audioFile: z.any().optional(),
 });
+
+// genQA results
+const questionSchema = z.object({
+  question: z.string(),
+  options: z.array(z.string()),
+  answer: z.number().int(), // index of the correct answer
+});
+
+export const readingCompResultSchema = z.object({
+  passage: z.string(),
+  questions: z.array(questionSchema),
+});
+
+export type ReadingCompResult = z.infer<typeof readingCompResultSchema>;
+
+export type Question = z.infer<typeof questionSchema>;
