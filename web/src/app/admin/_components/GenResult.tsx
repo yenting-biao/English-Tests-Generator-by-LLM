@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -24,13 +25,21 @@ import {
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
+
+// https://github.com/atlassian/react-beautiful-dnd/issues/2350
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 
 export default function GenResult({
   passage,
   questions,
-}: DeepPartial<ReadingCompResult>) {
+  isLoading,
+}: DeepPartial<ReadingCompResult> & { isLoading: boolean }) {
   const path = usePathname();
   const testType = path.split("/")[2];
   const defaultTitle: {
@@ -60,7 +69,7 @@ export default function GenResult({
 
   const passageRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    if (passageRef.current) {
+    if (passageRef.current && isLoading) {
       passageRef.current.scrollTop = passageRef.current.scrollHeight;
     }
   }, [passage]);
@@ -69,6 +78,10 @@ export default function GenResult({
     values: z.infer<typeof saveReadingCompResultSchema>
   ) => {
     console.log(values);
+    const tmp = values.questions[values.questions.length - 1].options.map(
+      (o) => o.option
+    );
+    console.log(tmp);
   };
 
   return (
@@ -108,7 +121,7 @@ export default function GenResult({
               </FormItem>
             )}
           />
-          <QuestionsField form={form} />
+          <QuestionsField form={form} isLoading={isLoading} />
           <Button type="submit" className="w-fit mt-5">
             Save the test to library
           </Button>
@@ -120,8 +133,10 @@ export default function GenResult({
 
 function QuestionsField({
   form,
+  isLoading,
 }: {
   form: UseFormReturn<z.infer<typeof saveReadingCompResultSchema>>;
+  isLoading: boolean;
 }) {
   const {
     fields: questionFields,
@@ -134,7 +149,7 @@ function QuestionsField({
 
   const qRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (qRef.current) {
+    if (qRef.current && isLoading) {
       qRef.current.scrollTop = qRef.current.scrollHeight;
     }
   }, [questionFields, form]);
@@ -142,10 +157,7 @@ function QuestionsField({
   return (
     <div className="">
       <h2 className="text-xl font-bold">Questions</h2>
-      <div
-        className="space-y-2 mt-3 border px-3 pb-3 min-h-96 max-h-[85dvh] overflow-auto"
-        ref={qRef}
-      >
+      <div className="space-y-2 mt-3 pb-3" ref={qRef}>
         <div className="space-y-3">
           {questionFields?.map((question, questionIndex) => (
             <div key={question.id} className="py-3">
@@ -155,7 +167,7 @@ function QuestionsField({
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center gap-3">
-                      <FormLabel className="text-xl font-bold">
+                      <FormLabel className="text-base font-semibold">
                         Question {questionIndex + 1}
                       </FormLabel>
                       <button
@@ -184,21 +196,19 @@ function QuestionsField({
             </div>
           ))}
         </div>
-        {questionFields.length > 0 && (
-          <div className="w-full flex justify-center">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                appendQuestion({ question: "", options: [] });
-              }}
-              className="w-fit mt-5 border-foreground"
-            >
-              <PlusCircle size={20} className="mr-2" />
-              Add Question
-            </Button>
-          </div>
-        )}
+        <div className="w-full flex justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              appendQuestion({ question: "", options: [] });
+            }}
+            className="w-fit mt-5 border-foreground"
+          >
+            <PlusCircle size={20} className="mr-2" />
+            Add Question
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -215,62 +225,128 @@ function OptionsField({
     fields: optionFields,
     append: appendOption,
     remove: removeOption,
+    move: moveOption,
   } = useFieldArray({
     control: form.control,
     name: `questions.${questionIndex}.options` as `questions.0.options`,
   });
+
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+
+    if (!destination) return;
+
+    if (
+      destination.droppableId !== source.droppableId &&
+      destination.index === source.index
+    )
+      return;
+
+    moveOption(source.index, destination.index);
+  };
+
   return (
     <div className="mt-1 space-y-2">
-      {optionFields?.map((option, optionIndex) => (
-        <div key={option.id} className="w-full flex items-center gap-2">
-          <FormField
-            control={form.control}
-            name={`questions.${questionIndex}.options.${optionIndex}.option`}
-            render={({ field }) => (
-              <FormItem className="flex-grow">
-                <div className="flex items-center gap-2">
-                  <FormLabel>
-                    ({String.fromCharCode(65 + optionIndex)})
-                  </FormLabel>
-                  <Input {...field} />
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`questions.${questionIndex}.options.${optionIndex}.correct`}
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center gap-2">
-                  <FormLabel>ans</FormLabel>
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              if (
-                window.confirm("Are you sure you want to delete this option?")
-              ) {
-                removeOption(optionIndex);
-              }
-            }}
-            className="hover:text-red-500 ml-3"
-          >
-            <Trash2 size={20} />
-          </button>
-        </div>
-      ))}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={`question-${questionIndex}-options`}>
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {optionFields?.map((option, optionIndex) => (
+                <Draggable
+                  key={`question-${questionIndex}-options-${optionIndex}`}
+                  draggableId={`question-${questionIndex}-options-${optionIndex}`}
+                  index={optionIndex}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className="w-full flex items-center gap-2 mb-2"
+                    >
+                      <div {...provided.dragHandleProps}>
+                        <GripVertical size={20} className="cursor-move" />
+                      </div>
+                      <FormField
+                        control={form.control}
+                        name={`questions.${questionIndex}.options.${optionIndex}.option`}
+                        render={({ field }) => (
+                          <FormItem className="flex-grow">
+                            <div className="flex items-center gap-2">
+                              <FormLabel>
+                                ({String.fromCharCode(65 + optionIndex)})
+                              </FormLabel>
+                              <Input
+                                {...field}
+                                value={option.option}
+                                onChange={(e) => {
+                                  const currentOptions = form.getValues(
+                                    `questions.${questionIndex}.options`
+                                  );
+                                  currentOptions[optionIndex].option =
+                                    e.target.value;
+                                  form.setValue(
+                                    `questions.${questionIndex}.options`,
+                                    currentOptions
+                                  );
+                                }}
+                              />
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`questions.${questionIndex}.options.${optionIndex}.correct`}
+                        render={() => (
+                          <FormItem>
+                            <div className="flex items-center gap-2">
+                              <FormLabel>ans</FormLabel>
+                              <FormControl>
+                                <Checkbox
+                                  checked={option.correct}
+                                  onCheckedChange={(checked) => {
+                                    const currentOptions = form.getValues(
+                                      `questions.${questionIndex}.options`
+                                    );
+                                    currentOptions[optionIndex].correct =
+                                      Boolean(checked);
+                                    form.setValue(
+                                      `questions.${questionIndex}.options`,
+                                      currentOptions
+                                    );
+                                  }}
+                                />
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this option?"
+                            )
+                          ) {
+                            removeOption(optionIndex);
+                          }
+                        }}
+                        className="hover:text-red-500 ml-3"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <Button
         type="button"
         variant="outline"

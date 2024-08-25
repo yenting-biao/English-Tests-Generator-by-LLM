@@ -4,7 +4,7 @@ import {
   readingCompResultSchema,
 } from "@/lib/validators/genQA";
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamObject, streamText } from "ai";
+import { streamObject } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
@@ -114,8 +114,23 @@ export async function POST(req: NextRequest) {
       maxTokens: 8192,
       temperature: 0.3,
       schema: readingCompResultSchema,
-      onFinish: async (object) => {
-        console.log("finish object:", object);
+      onFinish: async (param) => {
+        if (param.error) {
+          console.log(
+            "Error in generating reading comprehension questions:",
+            param.error
+          );
+          return;
+        } else {
+          console.log(
+            "Success in generating reading comprehension questions:",
+            param.object
+          );
+          if (!param.object) {
+            console.error("No object returned from the model");
+            return;
+          }
+        }
       },
     });
 
@@ -177,6 +192,10 @@ function getPrompt(
   const questionTypeFormatStr = questionTypes
     .map((val) => questionTypesDesciprtion[val])
     .join("\n");
+  const randomAnswers = Array.from({ length: numQuestions }, () =>
+    Math.floor(Math.random() * numOptions)
+  );
+  console.log("randomAnswers", randomAnswers);
 
   return `
   Please generate ${numPassages} reading comprehension questions with the following requirement:
@@ -195,13 +214,15 @@ function getPrompt(
       `
       : "The questions should contain different types of questions."
   }
-  I will give you some examples of reading comprehension questions. Please generate reading comprehension questions whose difficulty is similar to the examples, but the passage and questions should be different. Moreover, please also give the answers in the end. 
+  I will give you some examples of reading comprehension questions. Please generate reading comprehension questions whose difficulty is similar to the examples, but the passage and questions should be different. Moreover, please do NOT give the answers in the end, but indicate whether the option is correct or not after each option.
   Below are some examples, please learn from them carefully:\n\n
   
   ${examples}
 
   Above are the examples. I believe that you are now a master of generating reading comprehension questions.  Please generate reading comprehension questions whose quality is similar to the examples, and satisfy the 5 requirements I mentioned above before the examples. You should also ensure that all answer choices are plausible, paraphrased rather than directly quoted, and include misleading incorrect options. The questions should be specific and test the student's understanding and critical thinking skills.
   
-  Please generate a reading comprehension problem with one passage and ${numQuestions} questions, and ${numOptions} options for each question, and output them in the desired format. Remember to indicate whether the option is correct or incorrect after each option. DO NOT append the correct answer in the end.
+  Please generate a reading comprehension problem with one passage and ${numQuestions} questions, and ${numOptions} options for each question, and output them in the desired json format. The order of options to be marked correct of each questions should be: ${randomAnswers.join(
+    ","
+  )} (0-based index).
   `;
 }

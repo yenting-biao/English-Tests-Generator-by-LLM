@@ -90,8 +90,9 @@ const questionSchema = z.object({
       correct: z.boolean(),
     })
   ),
-  // answer: z.number().int(), // index of the correct answer
 });
+// answer: z.number().int(), // index of the correct answer
+// the answer field is because gpt's output...
 
 export const readingCompResultSchema = z.object({
   passage: z.string(),

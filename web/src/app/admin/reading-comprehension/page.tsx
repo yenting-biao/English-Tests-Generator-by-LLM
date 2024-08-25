@@ -1,7 +1,6 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { useRef } from "react";
 import { readingCompResultSchema } from "@/lib/validators/genQA";
 import ReadingForm from "./_components/ReadingForm";
 import { experimental_useObject as useObject } from "ai/react";
@@ -12,9 +11,6 @@ export default function Home() {
     api: "/api/reading",
     schema: readingCompResultSchema,
     onFinish({ object }) {
-      // if (object != null) {
-      //   setObjectResult(object);
-      // }
       console.log("onFinish", object);
     },
   });
@@ -23,7 +19,11 @@ export default function Home() {
     <div className="w-full max-w-3xl space-y-4 mx-auto">
       <ReadingForm submit={submit} isLoading={isLoading} />
       <Separator className="max-w-3xl w-full mt-10" />
-      <GenResult passage={object?.passage} questions={object?.questions} />
+      <GenResult
+        passage={object?.passage}
+        questions={object?.questions}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
