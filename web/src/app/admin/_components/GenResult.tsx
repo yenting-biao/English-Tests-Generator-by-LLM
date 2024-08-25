@@ -24,7 +24,7 @@ import {
 } from "@/lib/validators/genQA";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
 
 // https://github.com/atlassian/react-beautiful-dnd/issues/2350
@@ -34,6 +34,15 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
 export default function GenResult({
   passage,
@@ -74,14 +83,15 @@ export default function GenResult({
     }
   }, [passage]);
 
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [validatedValues, setValidatedValues] =
+    useState<z.infer<typeof saveReadingCompResultSchema>>();
   const onSubmit = async (
     values: z.infer<typeof saveReadingCompResultSchema>
   ) => {
     console.log(values);
-    const tmp = values.questions[values.questions.length - 1].options.map(
-      (o) => o.option
-    );
-    console.log(tmp);
+    setShowDialog(true);
+    setValidatedValues(values);
   };
 
   return (
@@ -125,9 +135,113 @@ export default function GenResult({
           <Button type="submit" className="w-fit mt-5">
             Save the test to library
           </Button>
+          <SubmitDialog
+            isOpen={showDialog}
+            setOpen={setShowDialog}
+            validatedValues={validatedValues}
+          />
         </form>
       </Form>
     </div>
+  );
+}
+
+function SubmitDialog({
+  isOpen,
+  setOpen,
+  validatedValues,
+}: {
+  isOpen: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  validatedValues?: z.infer<typeof saveReadingCompResultSchema>;
+}) {
+  if (!validatedValues) return null;
+
+  const { title, passage, questions } = validatedValues;
+  return (
+    <Dialog open={isOpen} onOpenChange={setOpen}>
+      <DialogContent className="max-w-[90%] max-h-[90dvh] overflow-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">Save the test</DialogTitle>
+          <DialogDescription>
+            Below is the preview of test you are about to save. Are you sure you
+            want to save it for future use?
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-2">
+          <div>
+            <p className="mb-3">
+              Below is what the students will see in the test:
+            </p>
+            <div className="border border-foreground rounded p-3 space-y-3">
+              <div>
+                <p className="font-bold text-lg mb-3">{title}</p>
+                <div className="whitespace-pre-wrap text-justify">
+                  {passage}
+                </div>
+              </div>
+              <div>
+                {questions.map((question, questionIndex) => (
+                  <div key={questionIndex} className="py-3">
+                    <p className="whitespace-pre-wrap text-justify">
+                      {questionIndex + 1}. {question.question}
+                    </p>
+                    <div className="space-y-1 mt-1">
+                      {question.options.map((option, optionIndex) => (
+                        <div
+                          key={optionIndex}
+                          className="flex items-center gap-2 whitespace-pre-wrap text-justify"
+                        >
+                          <div>({String.fromCharCode(65 + optionIndex)})</div>
+                          <div>{option.option}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <Separator />
+          <div>
+            <p className="mb-3">
+              Below is the answer key for the test. They will not be visible to
+              the students.
+            </p>
+            <div className="border border-foreground rounded p-3">
+              {questions
+                .map((question) => {
+                  // the index of the answer
+                  const answer = question.options.find((o) => o.correct);
+                  return answer
+                    ? String.fromCharCode(65 + question.options.indexOf(answer))
+                    : "N/A";
+                })
+                .join(", ")}
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={async () => {
+              console.log("Saving the test to library...");
+              console.log(validatedValues);
+              setOpen(false);
+            }}
+          >
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
