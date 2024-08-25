@@ -84,13 +84,22 @@ export const listeningClozeSchema = z.object({
 // genQA results
 const questionSchema = z.object({
   question: z.string(),
-  options: z.array(z.string()),
-  answer: z.number().int(), // index of the correct answer
+  options: z.array(
+    z.object({
+      option: z.string(),
+      correct: z.boolean(),
+    })
+  ),
+  // answer: z.number().int(), // index of the correct answer
 });
 
 export const readingCompResultSchema = z.object({
   passage: z.string(),
   questions: z.array(questionSchema),
+});
+
+export const saveReadingCompResultSchema = readingCompResultSchema.extend({
+  title: z.string().min(1).max(100),
 });
 
 export type ReadingCompResult = z.infer<typeof readingCompResultSchema>;

@@ -84,6 +84,7 @@ export async function POST(req: NextRequest) {
       2. **Paraphrased choices:** The descriptions of the choices should be rephrased rather than directly mirroring the sentences in the passage.
       3. **Misleading incorrect choices:** The incorrect options should be designed to mislead and attract students, making the question more difficult.
       4. **Specific and Detailed Question:** Frame the question to require a detailed understanding of the passage. Ask about specific facts, events, or arguments presented in the text, rather than general ideas.
+      5. **Evenly Distributed Correct Answers:** Ensure that the correct answer is not always the same letter (e.g., "B" is not always the correct answer).
       `,
     },
     {
@@ -120,38 +121,38 @@ export async function POST(req: NextRequest) {
 
     return objectResult.toTextStreamResponse();
 
-    const result = await streamText({
-      model: openai("gpt-4o-mini"),
-      messages: messages,
-      maxTokens: 8192,
-      temperature: 0.3,
-      onFinish: async (param) => {
-        const ret = await db
-          .insert(readingGenResultTable)
-          .values({
-            difficulty: difficulty,
-            numQuestions: numQuestions,
-            numOptions: numOptions,
-            numPassages: numPassages,
-            passageLength: passageLength,
-            topic: topic ?? "",
-            examples: examples,
-            generatedResult: param.text,
-          })
-          .$returningId();
+    // const result = await streamText({
+    //   model: openai("gpt-4o-mini"),
+    //   messages: messages,
+    //   maxTokens: 8192,
+    //   temperature: 0.3,
+    //   onFinish: async (param) => {
+    //     const ret = await db
+    //       .insert(readingGenResultTable)
+    //       .values({
+    //         difficulty: difficulty,
+    //         numQuestions: numQuestions,
+    //         numOptions: numOptions,
+    //         numPassages: numPassages,
+    //         passageLength: passageLength,
+    //         topic: topic ?? "",
+    //         examples: examples,
+    //         generatedResult: param.text,
+    //       })
+    //       .$returningId();
 
-        await Promise.all(
-          questionTypes.map((type) => {
-            return db.insert(readingQuestionTypesTable).values({
-              type: type,
-              generationId: ret[0].id,
-            });
-          })
-        );
-      },
-    });
+    //     await Promise.all(
+    //       questionTypes.map((type) => {
+    //         return db.insert(readingQuestionTypesTable).values({
+    //           type: type,
+    //           generationId: ret[0].id,
+    //         });
+    //       })
+    //     );
+    //   },
+    // });
 
-    return result.toTextStreamResponse();
+    // return result.toTextStreamResponse();
   } catch (error) {
     console.log("API or DB has some problems:", error);
     return NextResponse.json(
@@ -186,7 +187,7 @@ function getPrompt(
       ? `The topic of the passage should be one of the following topics: ${topic}.`
       : "The topic of the passage is not limited, but it should be appropriate."
   } 
-  4. There should be ${numQuestions} multiple choice questions, each with ${numOptions} answer choices. 
+  4. There should be ${numQuestions} multiple choice questions, each with ${numOptions} options. But only one option is correct. 
   5. ${
     questionTypes.length > 0
       ? `The questions should contain the following types: 
@@ -201,24 +202,6 @@ function getPrompt(
 
   Above are the examples. I believe that you are now a master of generating reading comprehension questions.  Please generate reading comprehension questions whose quality is similar to the examples, and satisfy the 5 requirements I mentioned above before the examples. You should also ensure that all answer choices are plausible, paraphrased rather than directly quoted, and include misleading incorrect options. The questions should be specific and test the student's understanding and critical thinking skills.
   
-  Please generate ${numPassages} passages and ${numQuestions} questions for each passage, and output each reading comprehension question in the following format, and separate each with two blank line:
-    
-  Passage: 
-  [The passage you generated]
-  
-  Questions: 
-  1. [Question 1 Description]
-  (A) [Choice A]
-  (B) [Choice B]
-  ...(Other choices)
-  2. [Question 2 Description]
-  (A) [Choice A]
-  (B) [Choice B]
-  ...(Other choices and questions)
-  
-  Answers:
-  1. [Answer 1]
-  2. [Answer 2]
-  ...(Other answers)
+  Please generate a reading comprehension problem with one passage and ${numQuestions} questions, and ${numOptions} options for each question, and output them in the desired format. Remember to indicate whether the option is correct or incorrect after each option. DO NOT append the correct answer in the end.
   `;
 }
