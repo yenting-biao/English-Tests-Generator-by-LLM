@@ -83,6 +83,13 @@ export default function GenResult({
     }
   }, [passage]);
 
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (formRef.current && isLoading) {
+      formRef.current.scrollIntoView({ behavior: "auto" });
+    }
+  }, [passage]);
+
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [validatedValues, setValidatedValues] =
     useState<z.infer<typeof saveReadingCompResultSchema>>();
@@ -103,6 +110,7 @@ export default function GenResult({
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-5 max-w-3xl w-full"
+          ref={formRef}
         >
           <FormField
             control={form.control}
@@ -131,6 +139,7 @@ export default function GenResult({
               </FormItem>
             )}
           />
+          {/* <div ref={passageScrollRef} /> */}
           <QuestionsField form={form} isLoading={isLoading} />
           <Button type="submit" className="w-fit mt-5">
             Save the test to library
@@ -264,7 +273,7 @@ function QuestionsField({
   const qRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (qRef.current && isLoading) {
-      qRef.current.scrollTop = qRef.current.scrollHeight;
+      qRef.current.scrollIntoView({ behavior: "auto", block: "end" });
     }
   }, [questionFields, form]);
 
@@ -309,6 +318,7 @@ function QuestionsField({
               <OptionsField form={form} questionIndex={questionIndex} />
             </div>
           ))}
+          <div ref={qRef} />
         </div>
         <div className="w-full flex justify-center">
           <Button
