@@ -248,7 +248,7 @@ function ClassRow({
         </Button>
         {edit && (
           <Button
-            variant="destructive"
+            variant="outline"
             onClick={() => {
               setEdit(false);
               setDisableEdit(false);
