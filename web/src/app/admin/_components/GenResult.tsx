@@ -46,10 +46,24 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function GenResult({
+  testId,
+  title,
   passage,
   questions,
   isLoading,
-}: DeepPartial<ReadingCompResult> & { isLoading: boolean }) {
+  isEdit = false,
+  setEditing,
+}: DeepPartial<ReadingCompResult> & {
+  testId?: string;
+  isLoading: boolean;
+  title?: string;
+  isEdit?: boolean;
+  setEditing?: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  if (isEdit && !setEditing) {
+    throw new Error("setEdit is required when isEdit is true");
+  }
+
   const path = usePathname();
   const testType = path.split("/")[2];
   const defaultTitle: {
@@ -64,7 +78,7 @@ export default function GenResult({
   const form = useForm<z.infer<typeof saveReadingCompResultSchema>>({
     resolver: zodResolver(saveReadingCompResultSchema),
     defaultValues: {
-      title: defaultTitle[testType],
+      title: title ?? defaultTitle[testType],
       passage: passage,
       questions: questions,
     },
@@ -94,19 +108,21 @@ export default function GenResult({
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [validatedValues, setValidatedValues] =
     useState<z.infer<typeof saveReadingCompResultSchema>>();
+
   const onSubmit = async (
     values: z.infer<typeof saveReadingCompResultSchema>
   ) => {
-    console.log(values);
     setShowDialog(true);
     setValidatedValues(values);
   };
 
   return (
     <div className="space-y-2">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
-        The Generated Test:
-      </h3>
+      {!isEdit && (
+        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
+          The Generated Test:
+        </h3>
+      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -143,12 +159,15 @@ export default function GenResult({
           {/* <div ref={passageScrollRef} /> */}
           <QuestionsField form={form} isLoading={isLoading} />
           <Button type="submit" className="w-fit mt-5">
-            Save the test to library
+            {isEdit ? "Update the test" : "Save the test to library"}
           </Button>
           <SubmitDialog
             isOpen={showDialog}
             setOpen={setShowDialog}
             validatedValues={validatedValues}
+            isEdit={isEdit}
+            testId={testId}
+            setEditing={setEditing}
           />
         </form>
       </Form>
@@ -160,28 +179,47 @@ function SubmitDialog({
   isOpen,
   setOpen,
   validatedValues,
+  isEdit,
+  testId,
+  setEditing,
 }: {
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   validatedValues?: z.infer<typeof saveReadingCompResultSchema>;
+  isEdit: boolean;
+  testId?: string;
+  setEditing?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   if (!validatedValues) return null;
+  if (isEdit) {
+    if (!testId) {
+      throw new Error("testId is required when isEdit is true");
+    }
+    if (!setEditing) {
+      throw new Error("setEditing is required when isEdit is true");
+    }
+  }
   const { title, passage, questions } = validatedValues;
   const { toast } = useToast();
   const router = useRouter();
 
   const onSubmit = async () => {
-    console.log("Saving the test to library...");
-    console.log(validatedValues);
-
     try {
-      const res = await fetch("/api/tests/reading-comp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validatedValues),
-      });
+      const res = isEdit
+        ? await fetch(`/api/tests/reading-comp/${testId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(validatedValues),
+          })
+        : await fetch("/api/tests/reading-comp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(validatedValues),
+          });
       if (!res.ok) {
         const body = await res.json();
         toast({
@@ -194,16 +232,25 @@ function SubmitDialog({
         toast({
           variant: "default",
           title: "Success",
-          description: "The test has been saved to the library.",
+          description: `The test has been ${
+            isEdit ? "updated" : "saved to the library."
+          }`,
         });
         setOpen(false);
-        router.push(`/admin/test/${body.testId}`);
+        if (isEdit) {
+          setEditing!(false);
+          router.refresh();
+        } else {
+          router.push(`/admin/test/${body.testId}`);
+        }
       }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "An error occurred while saving the test.",
+        description: `An error occurred while ${
+          isEdit ? "updating" : "saving"
+        } the test.`,
       });
       console.error(error);
     }

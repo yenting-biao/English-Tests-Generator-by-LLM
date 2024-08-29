@@ -31,7 +31,7 @@ export default async function Home() {
       <h5 className="text-2xl text-center font-medium mt-20">Manage tests:</h5>
       <div className="mx-auto mt-10 text-center">
         <Link
-          href="/admin/test-manage"
+          href="/admin/test"
           className="p-5 border-4 rounded-xl text-center text-lg md:text-xl font-semibold tracking-tight first:mt-0 hover:bg-secondary whitespace-nowrap"
         >
           Manage Saved Tests and Publish to Class

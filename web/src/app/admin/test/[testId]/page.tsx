@@ -56,9 +56,9 @@ export default async function TestsDetailPage({ params: { testId } }: Props) {
           <AccordionContent className="text-base">
             <TestEditor
               testId={testId}
-              testTitle={testDetail.title}
-              testQuestions={testDetail.questions}
-              testAnswers={testDetail.answers}
+              title={testDetail.title}
+              passage={testDetail.passage}
+              questions={testDetail.questions}
             />
           </AccordionContent>
         </AccordionItem>

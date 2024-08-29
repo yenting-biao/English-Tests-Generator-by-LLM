@@ -83,9 +83,11 @@ export const listeningClozeSchema = z.object({
 
 // genQA results
 const questionSchema = z.object({
+  id: z.string().optional(), // for db update
   question: z.string(),
   options: z.array(
     z.object({
+      id: z.string().optional(), // for db update
       option: z.string(),
       correct: z.boolean(),
     })
@@ -102,6 +104,8 @@ export const readingCompResultSchema = z.object({
 export const saveReadingCompResultSchema = readingCompResultSchema.extend({
   title: z.string().min(1).max(100),
 });
+
+export type SaveReadingCompResult = z.infer<typeof saveReadingCompResultSchema>;
 
 export type ReadingCompResult = z.infer<typeof readingCompResultSchema>;
 

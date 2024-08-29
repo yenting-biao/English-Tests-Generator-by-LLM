@@ -61,6 +61,7 @@ export const multipleChoiceQuestionTable = mysqlTable(
         onDelete: "cascade",
         onUpdate: "cascade",
       }),
+    ind: smallint("ind").notNull().default(0),
     description: text("description").notNull(),
   }
 );
@@ -73,6 +74,7 @@ export const optionsTable = mysqlTable("options", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
+  ind: smallint("ind").notNull().default(0),
   option: varchar("option", { length: 100 }).notNull(),
   isCorrect: boolean("is_correct").notNull(),
 });

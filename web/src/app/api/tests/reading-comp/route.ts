@@ -45,24 +45,28 @@ export async function POST(req: NextRequest) {
         .execute();
       testId = res.id;
 
-      for (const question of questions) {
+      for (let i = 0; i < questions.length; i++) {
+        const question = questions[i];
         [res] = await trx
           .insert(multipleChoiceQuestionTable)
           .values({
             readingTestId: testId,
             description: question.question,
+            ind: i,
           })
           .$returningId()
           .execute();
         const questionId = res.id;
 
-        for (const option of question.options) {
+        for (let j = 0; j < question.options.length; j++) {
+          const option = question.options[j];
           await trx
             .insert(optionsTable)
             .values({
               questionId: questionId,
               option: option.option,
               isCorrect: option.correct,
+              ind: j,
             })
             .execute();
         }
