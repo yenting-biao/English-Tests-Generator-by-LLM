@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const adminUserTable = mysqlTable("admin_user", {
   id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
-  username: varchar("username", { length: 20 }).notNull().unique(),
+  username: varchar("username", { length: 50 }).notNull().unique(),
   password: varchar("password", { length: 100 }).notNull(),
 });
 
@@ -37,6 +37,47 @@ export const readingQuestionTypesTable = mysqlTable("reading_qtypes", {
     }),
 });
 
+// about the saved reading test
+export const readingTestTable = mysqlTable("reading_test", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+  creatorId: varchar("creator_id", { length: 36 })
+    .notNull()
+    .references(() => adminUserTable.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  title: varchar("title", { length: 100 }).notNull(),
+  passage: text("passage").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const multipleChoiceQuestionTable = mysqlTable(
+  "multiple_choice_question",
+  {
+    id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+    readingTestId: varchar("reading_test_id", { length: 36 })
+      .notNull()
+      .references(() => readingTestTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    description: text("description").notNull(),
+  }
+);
+
+export const optionsTable = mysqlTable("options", {
+  id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+  questionId: varchar("question_id", { length: 36 })
+    .notNull()
+    .references(() => multipleChoiceQuestionTable.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  option: varchar("option", { length: 100 }).notNull(),
+  isCorrect: boolean("is_correct").notNull(),
+});
+
+// the old test table
 export const testsTable = mysqlTable("tests", {
   id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   creatorId: varchar("creator_id", { length: 36 })

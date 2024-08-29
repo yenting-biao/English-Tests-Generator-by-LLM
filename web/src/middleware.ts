@@ -15,11 +15,21 @@ export async function middleware(request: NextRequest) {
     (!session || !session.user)
   ) {
     return NextResponse.rewrite(new URL("/student/login", request.url));
+  } else if (request.nextUrl.pathname.startsWith("/api")) {
+    if (request.nextUrl.pathname.startsWith("/api/student")) {
+      if (!session || !session.user) {
+        return NextResponse.rewrite(new URL("/student/login", request.url));
+      }
+    } else if (!request.nextUrl.pathname.startsWith("/api/auth")) {
+      if (!session || session?.user.username !== privateEnv.ADMIN_USERNAME) {
+        return NextResponse.rewrite(new URL("/admin/login", request.url));
+      }
+    }
   } else if (!session || !session.user) {
     return NextResponse.rewrite(new URL("/student/login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/student/:path*"],
+  matcher: ["/admin/:path*", "/student/:path*", "/api/:path*"],
 };

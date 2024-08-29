@@ -23,7 +23,7 @@ import {
   saveReadingCompResultSchema,
 } from "@/lib/validators/genQA";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
 
@@ -43,6 +43,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function GenResult({
   passage,
@@ -165,8 +166,49 @@ function SubmitDialog({
   validatedValues?: z.infer<typeof saveReadingCompResultSchema>;
 }) {
   if (!validatedValues) return null;
-
   const { title, passage, questions } = validatedValues;
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const onSubmit = async () => {
+    console.log("Saving the test to library...");
+    console.log(validatedValues);
+
+    try {
+      const res = await fetch("/api/tests/reading-comp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validatedValues),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: body.error,
+        });
+      } else {
+        const body = await res.json();
+        toast({
+          variant: "default",
+          title: "Success",
+          description: "The test has been saved to the library.",
+        });
+        setOpen(false);
+        router.push(`/admin/test/${body.testId}`);
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "An error occurred while saving the test.",
+      });
+      console.error(error);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="max-w-[90%] max-h-[90dvh] overflow-auto">
@@ -239,15 +281,7 @@ function SubmitDialog({
           >
             Cancel
           </Button>
-          <Button
-            onClick={async () => {
-              console.log("Saving the test to library...");
-              console.log(validatedValues);
-              setOpen(false);
-            }}
-          >
-            Save
-          </Button>
+          <Button onClick={onSubmit}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
