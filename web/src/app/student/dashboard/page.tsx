@@ -1,4 +1,4 @@
-import TestPreview from "../_components/TestPreview";
+import TestPreview from "./_components/TestPreview";
 import {
   Accordion,
   AccordionContent,
@@ -98,7 +98,6 @@ function TestsDashboard({ tests, title }: TestsDashboardProps) {
                 key={test.id}
                 id={test.id}
                 name={test.name}
-                description={test.description}
                 submitted={test.submitted}
                 startTimestamp={test.startTimestamp}
                 endTimestamp={test.endTimestamp}

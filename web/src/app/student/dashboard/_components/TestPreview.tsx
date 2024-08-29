@@ -4,7 +4,6 @@ import * as React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -13,11 +12,11 @@ import {
 import { CalendarCheck2, CircleAlert, CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 type TestPreviewProps = {
   id: string;
   name: string;
-  description: string;
   submitted: boolean;
   startTimestamp: string;
   endTimestamp: string;
@@ -26,31 +25,20 @@ type TestPreviewProps = {
 export default function TestPreview({
   id,
   name,
-  description,
   submitted,
   startTimestamp,
   endTimestamp,
 }: TestPreviewProps) {
-  const formattedTimeStamp = (timestamp: string) =>
-    new Date(timestamp).toLocaleString("zh-TW", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
   return (
     <Card className="w-full">
       <CardHeader className="p-4">
         <CardTitle>{name}</CardTitle>
-        <CardDescription>
+        <CardDescription className="pt-1">
           <CalendarCheck2 className="inline-block mr-2" size={16} />
-          {formattedTimeStamp(startTimestamp)} -{" "}
-          {formattedTimeStamp(endTimestamp)}
+          {format(new Date(startTimestamp), "yyyy-MM-dd HH:mm")} -{" "}
+          {format(new Date(endTimestamp), "yyyy-MM-dd HH:mm")}
         </CardDescription>
       </CardHeader>
-      {/* <CardContent className="p-4 pt-0">{description}</CardContent> */}
       <CardFooter className="flex justify-between p-4 pt-0">
         {submitted ? (
           <p className="text-green-600">

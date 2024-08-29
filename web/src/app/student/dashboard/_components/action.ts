@@ -1,18 +1,21 @@
 import { db } from "@/db";
-import { assignedTestsTable, testsTable } from "@/db/schema";
+import { assignedTestsTable, readingTestTable } from "@/db/schema";
 import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 
 export async function getOpeningTests(classNumber: number) {
   const currentTimestamp = new Date();
   const result = await db
     .select({
-      testId: testsTable.id,
-      testTitle: testsTable.title,
+      testId: readingTestTable.id,
+      testTitle: readingTestTable.title,
       startDate: assignedTestsTable.startDate,
       endDate: assignedTestsTable.endDate,
     })
     .from(assignedTestsTable)
-    .innerJoin(testsTable, eq(assignedTestsTable.testId, testsTable.id))
+    .innerJoin(
+      readingTestTable,
+      eq(assignedTestsTable.testId, readingTestTable.id)
+    )
     .where(
       and(
         eq(assignedTestsTable.classNumber, classNumber),
@@ -28,13 +31,16 @@ export async function getHistoryTests(classNumber: number) {
   const currentTimestamp = new Date();
   const result = await db
     .select({
-      testId: testsTable.id,
-      testTitle: testsTable.title,
+      testId: readingTestTable.id,
+      testTitle: readingTestTable.title,
       startDate: assignedTestsTable.startDate,
       endDate: assignedTestsTable.endDate,
     })
     .from(assignedTestsTable)
-    .innerJoin(testsTable, eq(assignedTestsTable.testId, testsTable.id))
+    .innerJoin(
+      readingTestTable,
+      eq(assignedTestsTable.testId, readingTestTable.id)
+    )
     .where(
       and(
         eq(assignedTestsTable.classNumber, classNumber),
@@ -49,13 +55,16 @@ export async function getUpcomingTests(classNumber: number) {
   const currentTimestamp = new Date();
   const result = await db
     .select({
-      testId: testsTable.id,
-      testTitle: testsTable.title,
+      testId: readingTestTable.id,
+      testTitle: readingTestTable.title,
       startDate: assignedTestsTable.startDate,
       endDate: assignedTestsTable.endDate,
     })
     .from(assignedTestsTable)
-    .innerJoin(testsTable, eq(assignedTestsTable.testId, testsTable.id))
+    .innerJoin(
+      readingTestTable,
+      eq(assignedTestsTable.testId, readingTestTable.id)
+    )
     .where(
       and(
         eq(assignedTestsTable.classNumber, classNumber),
