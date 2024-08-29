@@ -29,13 +29,13 @@ export default async function Home() {
         <StyledLink href="/admin/listening-cloze">Listening Cloze</StyledLink>
       </div>
       <h5 className="text-2xl text-center font-medium mt-20">Manage tests:</h5>
-      <div className="mx-auto mt-10 text-center">
-        <Link
-          href="/admin/test"
-          className="p-5 border-4 rounded-xl text-center text-lg md:text-xl font-semibold tracking-tight first:mt-0 hover:bg-secondary whitespace-nowrap"
-        >
+      <div className="mx-auto mt-10 text-center flex flex-col gap-6 w-fit">
+        <StyledLink href="/admin/test">
           Manage Saved Tests and Publish to Class
-        </Link>
+        </StyledLink>
+        <StyledLink href="/admin/class">
+          Examine Class Details (coming soon)
+        </StyledLink>
       </div>
     </div>
   );
