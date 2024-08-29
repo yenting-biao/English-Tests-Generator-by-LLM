@@ -15,8 +15,7 @@ export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
-  let numPassages,
-    difficulty,
+  let difficulty,
     passageLength,
     topic,
     numQuestions,
@@ -25,7 +24,6 @@ export async function POST(req: NextRequest) {
     examples;
   try {
     const validatedData = readingComprehensionSchema.parse(data);
-    numPassages = validatedData.numPassages;
     difficulty = validatedData.difficulty;
     passageLength = validatedData.passageLength;
     topic = validatedData.topic;
@@ -90,7 +88,6 @@ export async function POST(req: NextRequest) {
     {
       role: "user",
       content: getPrompt(
-        numPassages,
         difficulty,
         passageLength,
         topic,
@@ -178,7 +175,6 @@ export async function POST(req: NextRequest) {
 }
 
 function getPrompt(
-  numPassages: number,
   difficulty: number,
   passageLength: number,
   topic: string | undefined,
@@ -198,7 +194,7 @@ function getPrompt(
   console.log("randomAnswers", randomAnswers);
 
   return `
-  Please generate ${numPassages} reading comprehension questions with the following requirement:
+  Please generate a reading comprehension questions with the following requirement:
   1. The overall difficulty level is CEFR ${difficultyStr}.
   2. The passage is around ${passageLength} words long, containing 3 to 5 paragraphs. 
   3. ${

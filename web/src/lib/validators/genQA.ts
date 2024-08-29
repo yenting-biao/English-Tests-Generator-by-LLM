@@ -42,15 +42,6 @@ const baseSchema = z.object({
 
 export const readingComprehensionSchema = baseSchema.extend({
   questionTypes: z.array(z.number().int()),
-  numPassages: z
-    .number()
-    .int()
-    .min(1, {
-      message: "You have to generate at least 1 passage.",
-    })
-    .max(5, {
-      message: "You can generate at most 5 passages.",
-    }),
   passageLength: z
     .number()
     .int()

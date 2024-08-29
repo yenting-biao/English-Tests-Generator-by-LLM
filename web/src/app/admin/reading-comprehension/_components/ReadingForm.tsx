@@ -39,7 +39,6 @@ export default function ReadingForm({ submit, isLoading }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      numPassages: 1,
       difficulty: 4,
       passageLength: 300,
       topic: "",
@@ -72,7 +71,6 @@ export default function ReadingForm({ submit, isLoading }: Props) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid md:grid-cols-2 gap-4 max-w-3xl w-full"
       >
-        <NumPassagesField form={form} />
         <DifficultyField form={form} />
         <PassageLengthField form={form} />
         <NumQuestionsField form={form} />
@@ -95,45 +93,6 @@ export default function ReadingForm({ submit, isLoading }: Props) {
         </Button>
       </form>
     </Form>
-  );
-}
-
-function NumPassagesField({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
-}) {
-  return (
-    <FormField
-      control={form.control}
-      name="numPassages"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Number of Passages</FormLabel>
-          <Select
-            onValueChange={(value) => field.onChange(Number(value))}
-            defaultValue={field.value.toString()}
-          >
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Select the number of passages." />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {Array.from({ length: 5 }, (_, i) => (
-                <SelectItem key={i} value={(i + 1).toString()}>
-                  {i + 1}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormDescription>
-            Select the number of passages to generate.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
   );
 }
 
