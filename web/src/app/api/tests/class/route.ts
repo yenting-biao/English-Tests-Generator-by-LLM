@@ -137,13 +137,20 @@ export async function PUT(req: NextRequest) {
 
   // update data
   try {
-    await db.execute(sql`
-        UPDATE ${assignedTestsTable}
-        SET show_answers = ${showAnswer},
-            start_date = ${new Date(startTimeStamp)},
-            end_date = ${new Date(endTimeStamp)}
-        WHERE test_id = ${testId} AND class_number = ${classNumber} 
-      `);
+    await db
+      .update(assignedTestsTable)
+      .set({
+        showAnswers: showAnswer,
+        startDate: new Date(startTimeStamp),
+        endDate: new Date(endTimeStamp),
+      })
+      .where(
+        and(
+          eq(assignedTestsTable.testId, testId),
+          eq(assignedTestsTable.classNumber, classNumber)
+        )
+      )
+      .execute();
   } catch (error) {
     console.log("Error when updating data to DB: " + error);
     return NextResponse.json(
