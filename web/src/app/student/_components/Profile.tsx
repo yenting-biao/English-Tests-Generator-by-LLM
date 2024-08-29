@@ -20,7 +20,7 @@ export default function Profile({ username, classNumber }: ProfileProps) {
         <p>Class {classNumber}</p>
       </div>
       <Button
-        className="w-fit py-2 px-6 ml-auto"
+        className="w-fit py-2 px-6 ml-auto md:mx-auto"
         onClick={() => signOut({ callbackUrl: "/student/login" })}
       >
         Log Out
