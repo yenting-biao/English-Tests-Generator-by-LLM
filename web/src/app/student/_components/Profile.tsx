@@ -5,19 +5,19 @@ import { signOut } from "next-auth/react";
 
 type ProfileProps = {
   username: string;
-  classNumber: number;
+  className?: string;
 };
 
-export default function Profile({ username, classNumber }: ProfileProps) {
+export default function Profile({ username, className }: ProfileProps) {
   return (
     <div className="flex flex-row md:flex-col items-center gap-5 md:gap-2 h-full px-3">
       <User
         size="88"
         className="border-2 rounded-full p-2 border-secondary-foreground"
       />
-      <div className="flex flex-col items-start md:items-center font-semibold text-lg">
-        <p>{username}</p>
-        <p>Class {classNumber}</p>
+      <div className="flex flex-col items-start md:items-center text-lg">
+        <p className="font-bold">{username}</p>
+        <p className="text-center font-normal">{className}</p>
       </div>
       <Button
         className="w-fit py-2 px-6 ml-auto md:mx-auto"
