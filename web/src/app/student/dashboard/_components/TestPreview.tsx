@@ -56,14 +56,16 @@ export default function TestPreview({
           href={`\\student\\tests\\${id}`}
           className={cn(
             buttonVariants({ variant: "default" }),
-            "px-4 p-2"
-            // (submitted || new Date() > new Date(endTimestamp)) &&
-            //   "pointer-events-none opacity-50"
+            "px-4 p-2",
+            new Date() < new Date(startTimestamp) &&
+              "pointer-events-none opacity-50"
           )}
         >
           {submitted || new Date() > new Date(endTimestamp)
             ? "View the test."
-            : "Take the test."}
+            : new Date() < new Date(startTimestamp)
+            ? "Not started yet."
+            : "Start the test."}
         </Link>
       </CardFooter>
     </Card>

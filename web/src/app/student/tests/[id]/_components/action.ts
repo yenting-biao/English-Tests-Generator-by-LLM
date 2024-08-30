@@ -4,7 +4,7 @@ import {
   multipleChoiceQuestionTable,
   optionsTable,
   readingTestTable,
-  submittedTestsTable,
+  studentSubmittedQuestionsTable,
 } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { and, asc, eq } from "drizzle-orm";
@@ -99,21 +99,67 @@ export async function getSubmitRecord(testId: string) {
   const session = await auth();
   if (!session || !session.user) return null;
 
-  const res = await db
+  const questions = await db
     .select({
-      submittedAnswers: submittedTestsTable.submittedAnswers,
-      submittedTimestamp: submittedTestsTable.submittedTimestamp,
+      questionId: studentSubmittedQuestionsTable.questionId,
+      questionInd: multipleChoiceQuestionTable.ind,
+      chosenOptionInd: optionsTable.ind,
+      chosenOptionId: studentSubmittedQuestionsTable.chosenOptionId,
+      submittedTimestamp: studentSubmittedQuestionsTable.submittedTimestamp,
     })
-    .from(submittedTestsTable)
-    .where(
-      and(
-        eq(submittedTestsTable.studentId, session.user.id),
-        eq(submittedTestsTable.testId, testId)
+    .from(studentSubmittedQuestionsTable)
+    .innerJoin(
+      multipleChoiceQuestionTable,
+      eq(
+        multipleChoiceQuestionTable.id,
+        studentSubmittedQuestionsTable.questionId
       )
     )
+    .innerJoin(
+      optionsTable,
+      eq(optionsTable.id, studentSubmittedQuestionsTable.chosenOptionId)
+    )
+    .where(
+      and(
+        eq(studentSubmittedQuestionsTable.studentId, session.user.id),
+        eq(studentSubmittedQuestionsTable.testId, testId)
+      )
+    )
+    .orderBy(asc(multipleChoiceQuestionTable.ind))
     .execute();
 
-  if (!res || res.length === 0) return null;
+  if (!questions || questions.length === 0) return null;
 
-  return res[0];
+  const submittedAnswers = questions.map((q) => ({
+    questionId: q.questionId,
+    // submittedOptionInd: q.chosenOptionInd,
+    submittedOptionId: q.chosenOptionId,
+  }));
+  const correctAnswers = await Promise.all(
+    questions.map(async (question) => {
+      const allOptions = await db
+        .select()
+        .from(optionsTable)
+        .where(eq(optionsTable.questionId, question.questionId))
+        .orderBy(asc(optionsTable.ind))
+        .execute();
+      const correctOption = allOptions.find((o) => o.isCorrect);
+      return {
+        questionId: question.questionId,
+        correctOptionId: correctOption?.id ?? "",
+        // correctOptionInd: correctOption?.ind ?? -1,
+      };
+    })
+  );
+
+  const [showAns] = await db
+    .select({ showAnswers: assignedTestsTable.showAnswers })
+    .from(assignedTestsTable)
+    .where(eq(assignedTestsTable.testId, testId))
+    .execute();
+  return {
+    submittedAnswers,
+    correctAnswers: showAns.showAnswers ? correctAnswers : [],
+    submittedTimestamp: questions[0].submittedTimestamp,
+  };
 }

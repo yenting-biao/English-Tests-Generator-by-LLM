@@ -1,11 +1,12 @@
 import { db } from "@/db";
 import {
   assignedTestsTable,
-  submittedTestsTable,
-  testsTable,
+  optionsTable,
+  readingTestTable,
+  studentSubmittedQuestionsTable,
 } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { studentSubmitTestSchema } from "@/lib/validators/studentTest";
+import { studentSubmitTestAPISchema } from "@/lib/validators/studentTest";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,12 +16,12 @@ export async function POST(
 ) {
   const session = await auth();
   if (!session || !session.user) {
-    return NextResponse.redirect("/login");
+    return NextResponse.redirect("/student/login");
   }
   console.log("student id", typeof session.user.id);
 
   const body = await req.json();
-  const validatedData = studentSubmitTestSchema.safeParse(body);
+  const validatedData = studentSubmitTestAPISchema.safeParse(body);
   if (!validatedData.success) {
     console.log("Error when validating data: ", validatedData.error);
     return NextResponse.json(
@@ -29,8 +30,7 @@ export async function POST(
     );
   }
 
-  const answers = validatedData.data.blanks;
-  const formattedAnswers = answers.map((answer) => answer.trim()).join(",");
+  const submittedAnswers = validatedData.data.answers;
   const student = session.user;
 
   // Check test is assigned to this class
@@ -47,8 +47,8 @@ export async function POST(
     .execute();
   const testInfos = await db
     .select()
-    .from(testsTable)
-    .where(eq(testsTable.id, testId))
+    .from(readingTestTable)
+    .where(eq(readingTestTable.id, testId))
     .execute();
   if (assignedTestInfos.length === 0 || testInfos.length === 0) {
     return NextResponse.json(
@@ -57,7 +57,6 @@ export async function POST(
     );
   }
   const assignedTestInfo = assignedTestInfos[0];
-  const testInfo = testInfos[0];
 
   // Check if the test is expired or not started
   const now = new Date();
@@ -71,17 +70,17 @@ export async function POST(
   }
 
   // Check if the student has already submitted this test
-  const submittedTests = await db
+  const submitRecord = await db
     .select()
-    .from(submittedTestsTable)
+    .from(studentSubmittedQuestionsTable)
     .where(
       and(
-        eq(submittedTestsTable.studentId, student.id),
-        eq(submittedTestsTable.testId, testId)
+        eq(studentSubmittedQuestionsTable.studentId, student.id),
+        eq(studentSubmittedQuestionsTable.testId, testId)
       )
     )
     .execute();
-  if (submittedTests.length > 0) {
+  if (submitRecord.length > 0) {
     return NextResponse.json(
       { error: "You have already submitted this test." },
       { status: 400 }
@@ -90,10 +89,22 @@ export async function POST(
 
   // Save the answers to the database
   try {
-    await db.insert(submittedTestsTable).values({
-      studentId: student.id,
-      testId: testId,
-      submittedAnswers: formattedAnswers,
+    const currentTimestamp = new Date();
+    await db.transaction(async () => {
+      await Promise.all(
+        submittedAnswers.map(async (answer) => {
+          await db
+            .insert(studentSubmittedQuestionsTable)
+            .values({
+              studentId: student.id,
+              testId: testId,
+              questionId: answer.questionId,
+              chosenOptionId: answer.chosenOptionId,
+              submittedTimestamp: currentTimestamp,
+            })
+            .execute();
+        })
+      );
     });
   } catch (error) {
     console.log("Error when saving answers to DB: ", error);
@@ -105,7 +116,20 @@ export async function POST(
 
   // If this test shows answers, return answers to student
   if (assignedTestInfo.showAnswers) {
-    const answers = testInfo.answers.split(",");
+    const answers = await Promise.all(
+      submittedAnswers.map(async (answer) => {
+        const questionId = answer.questionId;
+        const allOptions = await db
+          .select()
+          .from(optionsTable)
+          .where(eq(optionsTable.questionId, questionId))
+          .execute();
+        const correctOption = allOptions.find(
+          (option) => option.isCorrect === true
+        );
+        return correctOption?.ind ?? -1;
+      })
+    );
     return NextResponse.json(
       { showAnswers: true, answers: answers },
       { status: 200 }

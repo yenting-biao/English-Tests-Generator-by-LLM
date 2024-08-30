@@ -13,7 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { studentSubmitTestSchema as formSchema } from "@/lib/validators/studentTest";
+import {
+  studentSubmitTestFormSchema as formSchema,
+  studentSubmitTestAPISchema,
+} from "@/lib/validators/studentTest";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,27 +25,35 @@ import { MultipleChoiceQuestion } from "./action";
 
 const submitTestResponseSchema = z.object({
   showAnswers: z.boolean(),
-  answers: z.array(z.string()),
+  answers: z.array(z.number()),
 });
 
 type TestSubmissionFormProps = {
   questions: MultipleChoiceQuestion[];
   testId: string;
   disable: boolean;
-  submittedAnswers?: string[];
+  correctAnswers?: {
+    questionId: string;
+    correctOptionId: string;
+  }[];
+  submittedAnswers?: {
+    questionId: string;
+    submittedOptionId: string;
+  }[];
 };
 
 export default function TestSubmissionForm({
   questions,
   testId,
   disable,
+  correctAnswers,
   submittedAnswers,
 }: TestSubmissionFormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      answers: submittedAnswers,
+      answers: submittedAnswers?.map((answer) => answer.submittedOptionId),
     },
   });
 
@@ -55,12 +66,17 @@ export default function TestSubmissionForm({
       return;
     }
     console.log("values", values);
-    return;
 
+    const postBody: z.infer<typeof studentSubmitTestAPISchema> = {
+      answers: values.answers.map((value, ind) => ({
+        questionId: questions[ind].id,
+        chosenOptionId: value,
+      })),
+    };
     try {
       const response = await fetch(`/api/student/test/${testId}`, {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(postBody),
         headers: {
           "Content-Type": "application/json",
         },
@@ -105,7 +121,9 @@ export default function TestSubmissionForm({
         toast({
           variant: "default",
           title: "Test submitted successfully!",
-          description: `Correct answers: ${answers.join(", ")}`,
+          description: `Correct answers: ${answers
+            .map((ans) => String.fromCharCode(65 + ans))
+            .join(", ")}`,
         });
       } else {
         toast({
@@ -115,7 +133,6 @@ export default function TestSubmissionForm({
             "Answers of this test are hidden. Please wait for the instructor to reveal them.",
         });
       }
-
       router.refresh();
     } catch (error) {
       console.error("error", error);
@@ -132,43 +149,64 @@ export default function TestSubmissionForm({
     <Form {...form}>
       <Toaster />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {questions.map((question, index) => (
-          <FormField
-            key={index}
-            control={form.control}
-            name={`answers.${index}`}
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel className="text-base font-bold">
-                  {index + 1}. {question.question}
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-col space-y-1"
-                  >
-                    {question.options.map((option, optionIndex) => (
-                      <FormItem
-                        key={optionIndex}
-                        className="flex items-center space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <RadioGroupItem value={option.id} />
-                        </FormControl>
-                        <FormLabel className="font-normal text-base">
-                          ({String.fromCharCode(65 + optionIndex)}){" "}
-                          {option.option}
-                        </FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+        {questions.map((question, index) => {
+          const correctOptionId = correctAnswers?.find(
+            (answer) => answer.questionId === question.id
+          )?.correctOptionId;
+          const submittedOptionId = submittedAnswers?.find(
+            (answer) => answer.questionId === question.id
+          )?.submittedOptionId;
+          return (
+            <FormField
+              key={index}
+              control={form.control}
+              name={`answers.${index}`}
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-base font-bold">
+                    {index + 1}. {question.question}
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      disabled={disable}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      {question.options.map((option, optionIndex) => {
+                        const isCorrect =
+                          correctOptionId === option.id &&
+                          submittedOptionId === option.id;
+                        const isWrong =
+                          correctOptionId === option.id &&
+                          submittedOptionId !== option.id;
+                        return (
+                          <FormItem
+                            key={optionIndex}
+                            className="flex items-center space-x-3 space-y-0"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={option.id} />
+                            </FormControl>
+                            <FormLabel
+                              className={`font-normal text-base ${
+                                isCorrect && "text-green-500"
+                              } ${isWrong && "text-red-500"}`}
+                            >
+                              ({String.fromCharCode(65 + optionIndex)}){" "}
+                              {option.option}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      })}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          );
+        })}
         <Button type="submit" disabled={disable}>
           Submit
         </Button>

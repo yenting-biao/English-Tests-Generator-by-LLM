@@ -94,6 +94,7 @@ export const testsTable = mysqlTable("tests", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// still useful
 export const assignedTestsTable = mysqlTable("assigned_tests", {
   id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
   testId: varchar("test_id", { length: 36 })
@@ -107,6 +108,33 @@ export const assignedTestsTable = mysqlTable("assigned_tests", {
   startDate: timestamp("start_date").notNull(),
   endDate: timestamp("end_date").notNull(),
 });
+
+export const studentSubmittedQuestionsTable = mysqlTable(
+  "student_submitted_questions",
+  {
+    id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
+    studentId: varchar("student_id", { length: 36 }).notNull(),
+    testId: varchar("test_id", { length: 36 })
+      .notNull()
+      .references(() => testsTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    questionId: varchar("question_id", { length: 36 })
+      .notNull()
+      .references(() => multipleChoiceQuestionTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    chosenOptionId: varchar("chosen_option_id", { length: 36 })
+      .notNull()
+      .references(() => optionsTable.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    submittedTimestamp: timestamp("submitted_timestamp").notNull().defaultNow(),
+  }
+);
 
 export const submittedTestsTable = mysqlTable("submitted_test", {
   id: varchar("id", { length: 36 }).$defaultFn(uuidv4).primaryKey(),
