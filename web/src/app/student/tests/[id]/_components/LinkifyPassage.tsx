@@ -2,10 +2,10 @@
 import Linkify from "react-linkify";
 
 type Props = {
-  questions: string;
+  passage: string;
 };
 
-export default function LinkifyTestQuestions({ questions }: Props) {
+export default function LinkifyPassage({ passage }: Props) {
   const componentDecorator = (href: string, text: string, key: number) => (
     <a
       href={href}
@@ -18,7 +18,7 @@ export default function LinkifyTestQuestions({ questions }: Props) {
 
   return (
     <Linkify componentDecorator={componentDecorator}>
-      <p className="whitespace-pre-wrap text-justify">{questions}</p>
+      <p className="whitespace-pre-wrap text-justify">{passage}</p>
     </Linkify>
   );
 }

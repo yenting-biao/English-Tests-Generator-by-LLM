@@ -1,48 +1,97 @@
 import { db } from "@/db";
 import {
   assignedTestsTable,
+  multipleChoiceQuestionTable,
+  optionsTable,
+  readingTestTable,
   submittedTestsTable,
-  testsTable,
 } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
+
+export type MultipleChoiceQuestion = {
+  id: string;
+  ind: number;
+  question: string;
+  options: {
+    id: string;
+    option: string;
+    ind: number;
+  }[];
+};
 
 export async function getTestById(testId: string) {
   const session = await auth();
   if (!session || !session.user) return null;
+  const user = session.user;
 
-  const res = await db
+  const [test] = await db
     .select({
-      title: testsTable.title,
-      questions: testsTable.questions,
-      ans: testsTable.answers,
-      deadline: assignedTestsTable.endDate,
+      testId: readingTestTable.id,
+      title: readingTestTable.title,
+      passage: readingTestTable.passage,
+      startDate: assignedTestsTable.startDate,
+      endDate: assignedTestsTable.endDate,
     })
-    .from(testsTable)
-    .innerJoin(assignedTestsTable, eq(testsTable.id, assignedTestsTable.testId))
+    .from(readingTestTable)
+    .innerJoin(
+      assignedTestsTable,
+      eq(readingTestTable.id, assignedTestsTable.testId)
+    )
     .where(
       and(
-        eq(testsTable.id, testId),
-        eq(assignedTestsTable.classNumber, session.user.classNumber)
+        eq(readingTestTable.id, testId),
+        eq(assignedTestsTable.classNumber, user.classNumber)
       )
     )
     .execute();
 
-  if (!res || res.length === 0) return null;
+  if (!test) return null;
+
+  const questions = await db
+    .select({
+      id: multipleChoiceQuestionTable.id,
+      ind: multipleChoiceQuestionTable.ind,
+      question: multipleChoiceQuestionTable.description,
+    })
+    .from(multipleChoiceQuestionTable)
+    .where(eq(multipleChoiceQuestionTable.readingTestId, testId))
+    .orderBy(asc(multipleChoiceQuestionTable.ind))
+    .execute();
+
+  const fullQuestions = await Promise.all(
+    questions.map(async (q) => {
+      const options = await db
+        .select({
+          id: optionsTable.id,
+          option: optionsTable.option,
+          ind: optionsTable.ind,
+        })
+        .from(optionsTable)
+        .where(eq(optionsTable.questionId, q.id))
+        .orderBy(asc(optionsTable.ind))
+        .execute();
+
+      return {
+        ...q,
+        options: options,
+      };
+    })
+  );
 
   const ret: {
     title: string;
-    questions: string;
-    numAns: number;
-    deadline: Date;
-  }[] = res.map((r) => {
-    return {
-      title: r.title,
-      questions: r.questions,
-      numAns: r.ans.split(",").length,
-      deadline: r.deadline,
-    };
-  });
+    passage: string;
+    questions: MultipleChoiceQuestion[];
+    startDate: Date;
+    endDate: Date;
+  } = {
+    title: test.title,
+    passage: test.passage,
+    questions: fullQuestions,
+    startDate: test.startDate,
+    endDate: test.endDate,
+  };
   return ret;
 }
 

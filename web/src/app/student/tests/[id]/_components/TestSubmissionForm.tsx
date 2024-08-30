@@ -13,26 +13,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { studentSubmitTestSchema as formSchema } from "@/lib/validators/studentTest";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/navigation";
+import { MultipleChoiceQuestion } from "./action";
 
 const submitTestResponseSchema = z.object({
   showAnswers: z.boolean(),
   answers: z.array(z.string()),
 });
 
-interface TestSubmissionFormProps {
-  numBlanks: number;
+type TestSubmissionFormProps = {
+  questions: MultipleChoiceQuestion[];
   testId: string;
   disable: boolean;
   submittedAnswers?: string[];
-}
+};
 
 export default function TestSubmissionForm({
-  numBlanks,
+  questions,
   testId,
   disable,
   submittedAnswers,
@@ -41,7 +42,7 @@ export default function TestSubmissionForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      blanks: submittedAnswers,
+      answers: submittedAnswers,
     },
   });
 
@@ -53,7 +54,8 @@ export default function TestSubmissionForm({
     ) {
       return;
     }
-    values.blanks = values.blanks.map((blank) => blank.trim());
+    console.log("values", values);
+    return;
 
     try {
       const response = await fetch(`/api/student/test/${testId}`, {
@@ -130,16 +132,37 @@ export default function TestSubmissionForm({
     <Form {...form}>
       <Toaster />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {Array.from({ length: numBlanks }, (_, index) => (
+        {questions.map((question, index) => (
           <FormField
             key={index}
             control={form.control}
-            name={`blanks.${index}`}
+            name={`answers.${index}`}
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Question {index + 1}.</FormLabel>
+              <FormItem className="space-y-3">
+                <FormLabel className="text-base font-bold">
+                  {index + 1}. {question.question}
+                </FormLabel>
                 <FormControl>
-                  <Input {...field} disabled={disable} />
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    {question.options.map((option, optionIndex) => (
+                      <FormItem
+                        key={optionIndex}
+                        className="flex items-center space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <RadioGroupItem value={option.id} />
+                        </FormControl>
+                        <FormLabel className="font-normal text-base">
+                          ({String.fromCharCode(65 + optionIndex)}){" "}
+                          {option.option}
+                        </FormLabel>
+                      </FormItem>
+                    ))}
+                  </RadioGroup>
                 </FormControl>
                 <FormMessage />
               </FormItem>
