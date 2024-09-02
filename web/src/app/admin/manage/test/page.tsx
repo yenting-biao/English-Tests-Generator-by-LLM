@@ -24,7 +24,7 @@ export default async function TestManagePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3">
         {tests &&
           tests.map((test) => (
-            <Link href={`/admin/test/${test.id}`} key={test.id}>
+            <Link href={`/admin/manage/test/${test.id}`} key={test.id}>
               <Card className="hover:bg-secondary">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xl">{test.title}</CardTitle>

@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { readingCompResultSchema } from "@/lib/validators/genQA";
 import ReadingForm from "./_components/ReadingForm";
 import { experimental_useObject as useObject } from "ai/react";
-import GenResult from "../_components/GenResult";
+import GenResult from "../../_components/GenResult";
 
 export default function Home() {
   const { submit, isLoading, object } = useObject({

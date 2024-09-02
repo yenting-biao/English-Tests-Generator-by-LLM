@@ -75,7 +75,7 @@ export const optionsTable = mysqlTable("options", {
       onUpdate: "cascade",
     }),
   ind: smallint("ind").notNull().default(0),
-  option: varchar("option", { length: 100 }).notNull(),
+  option: text("option").notNull(),
   isCorrect: boolean("is_correct").notNull(),
 });
 

@@ -2,7 +2,7 @@
 import { useState, useRef } from "react";
 import { ClozeForm } from "./_components/ClozeForm";
 import { Separator } from "@/components/ui/separator";
-import GenerationResult from "../_components/GenerationResult";
+import GenerationResult from "../../_components/GenerationResult";
 
 export default function ListeningPage() {
   const [streaming, setStreaming] = useState<boolean>(false);

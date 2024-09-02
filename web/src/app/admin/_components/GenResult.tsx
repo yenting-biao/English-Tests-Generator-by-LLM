@@ -65,7 +65,7 @@ export default function GenResult({
   }
 
   const path = usePathname();
-  const testType = path.split("/")[2];
+  const testType = path.split("/")[3];
   const defaultTitle: {
     [key: string]: string;
   } = {
@@ -241,7 +241,7 @@ function SubmitDialog({
           setEditing!(false);
           router.refresh();
         } else {
-          router.push(`/admin/test/${body.testId}`);
+          router.push(`/admin/manage/test/${body.testId}`);
         }
       }
     } catch (error) {

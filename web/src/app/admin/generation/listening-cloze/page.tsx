@@ -1,9 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
-import { ListeningForm } from "./_components/ListeningForm";
+import { ListeningClozeForm } from "./_components/ListeningClozeForm";
 import { Separator } from "@/components/ui/separator";
-import GenerationResult from "../_components/GenerationResult";
-import SavedTestForm from "../_components/SaveTestForm";
+import GenerationResult from "../../_components/GenerationResult";
 
 export default function ListeningPage() {
   const [streaming, setStreaming] = useState<boolean>(false);
@@ -12,7 +11,7 @@ export default function ListeningPage() {
 
   return (
     <div className="w-full max-w-3xl space-y-4 mx-auto">
-      <ListeningForm
+      <ListeningClozeForm
         streaming={streaming}
         setStreaming={setStreaming}
         resultRef={resultRef}
@@ -24,7 +23,6 @@ export default function ListeningPage() {
         result={result}
         resultRef={resultRef}
       />
-      <SavedTestForm />
     </div>
   );
 }
