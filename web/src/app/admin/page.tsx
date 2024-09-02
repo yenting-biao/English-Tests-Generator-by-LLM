@@ -25,9 +25,11 @@ export default async function Home() {
         <StyledLink href="/admin/generation/listening-comprehension">
           Listening Comprehension
         </StyledLink>
-        <StyledLink href="/admin/generation/cloze">Cloze</StyledLink>
-        <StyledLink href="/admin/generation/listening-cloze">
-          Listening Cloze
+        <StyledLink href="/admin/generation/cloze" disabled>
+          Cloze <br /> (unavailable now)
+        </StyledLink>
+        <StyledLink href="/admin/generation/listening-cloze" disabled>
+          Listening Cloze <br /> (unavailable now)
         </StyledLink>
       </div>
       <h5 className="text-2xl text-center font-medium mt-20">Manage tests:</h5>
@@ -47,18 +49,23 @@ function StyledLink({
   href,
   children,
   className,
+  disabled = false,
 }: {
   href: string;
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 }) {
   return (
     <Link
       href={href}
       className={cn(
         "p-5 border-4 rounded-xl text-center text-lg md:text-xl font-semibold tracking-tight first:mt-0 hover:bg-secondary whitespace-nowrap",
-        className
+        className,
+        disabled && "opacity-50 cursor-not-allowed pointer-events-none"
       )}
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : undefined}
     >
       {children}
     </Link>

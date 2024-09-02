@@ -84,6 +84,7 @@ export async function getAllClasses() {
     return null;
   }
 
+  // TODO: add `WHERE open = 1` to the query before production
   const [result] = await studentdb.query(`
     SELECT *
     FROM FreshmanEnglish_group
