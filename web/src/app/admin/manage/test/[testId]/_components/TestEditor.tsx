@@ -1,6 +1,7 @@
 "use client";
 
 import GenResult from "@/app/admin/_components/GenResult";
+import LinkifyPassage from "@/components/LinkifyPassage";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Question } from "@/lib/validators/genQA";
@@ -52,7 +53,7 @@ export default function TestEditor({
               <div>
                 <p className="font-bold text-lg mb-3">{title}</p>
                 <div className="whitespace-pre-wrap text-justify">
-                  {passage}
+                  <LinkifyPassage passage={passage} />
                 </div>
               </div>
               <div>

@@ -3,6 +3,7 @@
 import {
   Form,
   FormControl,
+  FormDescription,
   //  FormDescription,
   FormField,
   FormItem,
@@ -44,6 +45,16 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import LinkifyPassage from "@/components/LinkifyPassage";
+
+const defaultTitle: {
+  [key: string]: string;
+} = {
+  "reading-comprehension": "Reading Comprehension",
+  "listening-comprehension": "Listening Comprehension",
+  cloze: "Cloze",
+  "listening-cloze": "Listening Cloze",
+};
 
 export default function GenResult({
   testId,
@@ -66,14 +77,6 @@ export default function GenResult({
 
   const path = usePathname();
   const testType = path.split("/")[3];
-  const defaultTitle: {
-    [key: string]: string;
-  } = {
-    "reading-comprehension": "Reading Comprehension",
-    "listening-comprehension": "Listening Comprehension",
-    cloze: "Cloze",
-    "listening-cloze": "Listening Cloze",
-  };
 
   const form = useForm<z.infer<typeof saveReadingCompResultSchema>>({
     resolver: zodResolver(saveReadingCompResultSchema),
@@ -145,12 +148,22 @@ export default function GenResult({
             name="passage"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xl font-bold">Passage</FormLabel>
+                <FormLabel className="text-xl font-bold">
+                  Passage/Description
+                </FormLabel>
+                <FormDescription>
+                  For reading comprehension, the generated passage will be shown
+                  here. As for listening comprehension, the default test
+                  description would be instructions like below. You can modify
+                  it as needed.
+                </FormDescription>
                 <Textarea
                   {...field}
                   defaultValue={passage}
                   ref={passageRef}
-                  className="min-h-96  whitespace-pre-wrap"
+                  className={`${
+                    testType == "reading-comprehension" ? "min-h-96" : ""
+                  } whitespace-pre-wrap`}
                 />
                 <FormMessage />
               </FormItem>
@@ -263,7 +276,8 @@ function SubmitDialog({
           <DialogTitle className="text-2xl">Save the test</DialogTitle>
           <DialogDescription>
             Below is the preview of test you are about to save. Are you sure you
-            want to save it for future use?
+            want to{" "}
+            {isEdit ? "save the edited test?" : "save it for future use?"}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
@@ -274,9 +288,7 @@ function SubmitDialog({
             <div className="border border-foreground rounded p-3 space-y-3">
               <div>
                 <p className="font-bold text-lg mb-3">{title}</p>
-                <div className="whitespace-pre-wrap text-justify">
-                  {passage}
-                </div>
+                <LinkifyPassage passage={passage} />
               </div>
               <div>
                 {questions.map((question, questionIndex) => (
@@ -328,7 +340,7 @@ function SubmitDialog({
           >
             Cancel
           </Button>
-          <Button onClick={onSubmit}>Save</Button>
+          <Button onClick={onSubmit}>{isEdit ? "Update" : "Save"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

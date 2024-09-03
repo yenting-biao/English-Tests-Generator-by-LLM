@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { assignedTestsTable, readingTestTable } from "@/db/schema";
-import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
+import { and, asc, desc, eq, gt, gte, lt, lte } from "drizzle-orm";
 
 export async function getOpeningTests(classNumber: number) {
   const currentTimestamp = new Date();
@@ -23,6 +23,7 @@ export async function getOpeningTests(classNumber: number) {
         gte(assignedTestsTable.endDate, currentTimestamp)
       )
     )
+    .orderBy(asc(assignedTestsTable.endDate))
     .execute();
   return result;
 }
@@ -47,6 +48,7 @@ export async function getHistoryTests(classNumber: number) {
         lt(assignedTestsTable.endDate, currentTimestamp)
       )
     )
+    .orderBy(desc(assignedTestsTable.endDate))
     .execute();
   return result;
 }
@@ -71,6 +73,7 @@ export async function getUpcomingTests(classNumber: number) {
         gt(assignedTestsTable.startDate, currentTimestamp)
       )
     )
+    .orderBy(asc(assignedTestsTable.startDate))
     .execute();
   return result;
 }

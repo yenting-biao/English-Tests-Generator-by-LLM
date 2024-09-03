@@ -25,21 +25,18 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { listeningTestSchema as formSchema } from "@/lib/validators/genQA";
+import { listeningComprehensionSchema as formSchema } from "@/lib/validators/genQA";
 import { questionTypes } from "@/lib/constants/questionTypes";
 import React from "react";
 
-export function ListeningForm({
-  setResult,
-  streaming,
-  setStreaming,
-  resultRef,
-}: {
-  setResult: React.Dispatch<React.SetStateAction<string>>;
-  streaming: boolean;
-  setStreaming: React.Dispatch<React.SetStateAction<boolean>>;
-  resultRef: React.MutableRefObject<HTMLDivElement | null>;
-}) {
+type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  submit: (input: any) => void;
+  isLoading: boolean;
+  setUrl: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export function ListeningForm({ submit, isLoading, setUrl }: Props) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,71 +51,25 @@ export function ListeningForm({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // The form values are type-safe and validated.
-    setStreaming(true);
-
     try {
-      const res = await fetch("/api/listening", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      if (res.status === 400) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "Please make sure you provided a valid Youtube link and the form is filled correctly.",
-          duration: 3000,
-        });
-        return;
-      } else if (!res.ok || !res.body) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "Failed to generate questions due to server error. Please try again later.",
-          duration: 3000,
-        });
-        return;
-      }
-
-      setResult("");
-      resultRef.current?.scrollIntoView({
-        behavior: "auto",
-        block: "start",
-        inline: "nearest",
-      });
-
-      const reader = res.body.getReader();
-      let count = 0;
-      let result = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          break;
-        }
-        result += new TextDecoder().decode(value);
-        setResult(result);
-        count++;
-        if (count > 2048) {
-          break;
-        }
-      }
+      submit(values);
+      setUrl(values.url);
     } catch (error) {
-      console.error(error);
-      alert("Failed to generate questions. Please try again.");
-    } finally {
-      setStreaming(false);
+      console.error(
+        "An error occurred when submitting request and streaming: " + error
+      );
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+      });
     }
   };
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid md:grid-cols-2 gap-4 max-w-3xl w-full"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl w-full"
       >
         <UrlField form={form} />
         <DifficultyField form={form} />
@@ -132,11 +83,16 @@ export function ListeningForm({
         </div>
         <Button
           type="submit"
-          className="w-fit md:col-span-2 disabled:cursor-not-allowed"
-          disabled={streaming}
+          className="w-fit disabled:cursor-not-allowed"
+          disabled={isLoading}
         >
           Generate!
         </Button>
+        <div className="text-sm w-full col-span-2 ">
+          Please note that the time needed to generate may vary depending on the
+          length of the video. We need to first download it from Youtube, then
+          convert it to text before generating questions. Please wait patiently.
+        </div>
       </form>
     </Form>
   );
@@ -292,6 +248,7 @@ function QuestionTypesField({
     <FormField
       control={form.control}
       name="questionTypes"
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       render={({ field }) => (
         <FormItem>
           <div className="mb-2">

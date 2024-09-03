@@ -59,7 +59,7 @@ export const readingComprehensionSchema = baseSchema.extend({
     .optional(),
 });
 
-export const listeningTestSchema = baseSchema.extend({
+export const listeningComprehensionSchema = baseSchema.extend({
   questionTypes: z.array(z.number().int()),
   url: z.string().url({ message: "Please provide a valid URL." }),
 });
@@ -92,7 +92,15 @@ export const readingCompResultSchema = z.object({
   questions: z.array(questionSchema),
 });
 
+export const listeningCompResultSchema = z.object({
+  questions: z.array(questionSchema),
+});
+
 export const saveReadingCompResultSchema = readingCompResultSchema.extend({
+  title: z.string().min(1).max(100),
+});
+
+export const saveListeningCompResultSchema = listeningCompResultSchema.extend({
   title: z.string().min(1).max(100),
 });
 

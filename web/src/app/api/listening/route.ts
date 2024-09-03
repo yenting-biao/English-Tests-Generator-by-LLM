@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { listeningTestSchema } from "@/lib/validators/genQA";
+import {
+  listeningComprehensionSchema,
+  listeningCompResultSchema,
+} from "@/lib/validators/genQA";
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { streamObject } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
@@ -10,11 +13,12 @@ import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
 // ref: https://github.com/fent/node-ytdl-core/issues/932#issuecomment-2233405812
 import ytdl from "@distube/ytdl-core";
 import fs from "fs";
-import { db } from "@/db";
-import {
-  listeningGenResultTable,
-  listeningQuestionTypesTable,
-} from "@/db/schema";
+// import { db } from "@/db";
+// import {
+//   listeningGenResultTable,
+//   listeningQuestionTypesTable,
+// } from "@/db/schema";
+
 export const maxDuration = 60;
 
 const openai = new OpenAI({
@@ -25,7 +29,7 @@ export async function POST(req: NextRequest) {
   const data = await req.json();
   let url, difficulty, numQuestions, numOptions, questionTypes, examples;
   try {
-    const validatedData = listeningTestSchema.parse(data);
+    const validatedData = listeningComprehensionSchema.parse(data);
     url = validatedData.url;
     difficulty = validatedData.difficulty;
     numQuestions = validatedData.numQuestions;
@@ -110,6 +114,7 @@ export async function POST(req: NextRequest) {
       2. **Paraphrased choices:** The descriptions of the choices should be rephrased rather than directly mirroring the sentences in the passage.
       3. **Misleading incorrect choices:** The incorrect options should be designed to mislead and attract students, making the question more difficult.
       4. **Specific and Detailed Question:** Frame the question to require a detailed understanding of the passage. Ask about specific facts, events, or arguments presented in the text, rather than general ideas.
+      5. **Evenly Distributed Correct Answers:** Ensure that the correct answer is not always the same letter (e.g., "B" is not always the correct answer).
       `,
     },
     {
@@ -131,37 +136,64 @@ export async function POST(req: NextRequest) {
       compatibility: "strict",
     });
 
-    const result = await streamText({
+    const objectResult = await streamObject({
       model: openai("gpt-4o-mini"),
       messages: messages,
       maxTokens: 8192,
       temperature: 0.3,
+      schema: listeningCompResultSchema,
       onFinish: async (param) => {
-        const ret = await db
-          .insert(listeningGenResultTable)
-          .values({
-            difficulty: difficulty,
-            url: url,
-            numQuestions: numQuestions,
-            numOptions: numOptions,
-            examples: examples,
-            transcription: String(transcription),
-            generatedResult: param.text,
-          })
-          .$returningId();
-
-        await Promise.all(
-          questionTypes.map((type) => {
-            return db.insert(listeningQuestionTypesTable).values({
-              type: type,
-              generationId: ret[0].id,
-            });
-          })
-        );
+        if (param.error) {
+          console.log(
+            "Error in generating listening comprehension questions:",
+            param.error
+          );
+          return;
+        } else {
+          console.log(
+            "Success in generating listening comprehension questions:",
+            param.object
+          );
+          if (!param.object) {
+            console.error("No object returned from the model");
+            return;
+          }
+        }
       },
     });
 
-    return result.toTextStreamResponse();
+    return objectResult.toTextStreamResponse();
+
+    // const result = await streamText({
+    //   model: openai("gpt-4o-mini"),
+    //   messages: messages,
+    //   maxTokens: 8192,
+    //   temperature: 0.3,
+    //   onFinish: async (param) => {
+    //     const ret = await db
+    //       .insert(listeningGenResultTable)
+    //       .values({
+    //         difficulty: difficulty,
+    //         url: url,
+    //         numQuestions: numQuestions,
+    //         numOptions: numOptions,
+    //         examples: examples,
+    //         transcription: String(transcription),
+    //         generatedResult: param.text,
+    //       })
+    //       .$returningId();
+
+    //     await Promise.all(
+    //       questionTypes.map((type) => {
+    //         return db.insert(listeningQuestionTypesTable).values({
+    //           type: type,
+    //           generationId: ret[0].id,
+    //         });
+    //       })
+    //     );
+    //   },
+    // });
+    // return result.toTextStreamResponse();
   } catch (error) {
     console.log("API or DB has some problems:", error);
     return NextResponse.json(
@@ -228,6 +260,9 @@ function getPrompt(
   const questionTypeFormatStr = questionTypes
     .map((val) => questionTypesDesciprtion[val])
     .join("\n");
+  const randomAnswers = Array.from({ length: numQuestions }, () =>
+    Math.floor(Math.random() * numOptions)
+  );
 
   return `
   I will give you a transcription of a Youtube video. Please generate reading comprehension questions based on the transcription with the following requirement:
@@ -245,28 +280,15 @@ function getPrompt(
     ${transcription}
   </Transcription> 
   
-  I will give you some examples of reading comprehension questions. Please generate reading comprehension questions based on the transcription provided whose difficulty is similar to the examples. Moreover, please also give the answers in the end. 
+  I will give you some examples of reading comprehension questions. Please generate reading comprehension questions based on the transcription provided whose difficulty is similar to the examples. Moreover, please do NOT give the answers in the end, but indicate whether the option is correct or not after each option.
   Below are some examples, please learn from them carefully:\n\n
   
   ${examples}
 
   Above are the examples. I believe that you are now a master of generating reading comprehension questions.  Please generate reading comprehension questions based on the transcription whose quality is similar to the examples, and satisfy the 3 requirements I mentioned above before the examples. You should also ensure that all answer choices are plausible, paraphrased rather than directly quoted, and include misleading incorrect options. The questions should be specific and test the student's understanding and critical thinking skills.
   
-  Please generate ${numQuestions} questions for the provided transcription, and output each reading comprehension question in the following format:
-    
-  Questions: 
-  1. [Question 1 Description]
-  (A) [Choice A]
-  (B) [Choice B]
-  ...(Other choices)
-  2. [Question 2 Description]
-  (A) [Choice A]
-  (B) [Choice B]
-  ...(Other choices and questions)
-  
-  Answers:
-  1. [Answer 1]
-  2. [Answer 2]
-  ...(Other answers)
+  Please generate ${numQuestions} questions for the provided transcription, and output them in the desired json format. The order of options to be marked correct of each questions should be: ${randomAnswers.join(
+    ","
+  )} (0-based index).
   `;
 }

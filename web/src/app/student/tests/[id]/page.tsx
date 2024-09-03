@@ -2,7 +2,7 @@ import { CalendarCheck2, CircleAlert, CircleCheckBig } from "lucide-react";
 import { getSubmitRecord, getTestById } from "./_components/action";
 import TestSubmissionForm from "./_components/TestSubmissionForm";
 import { format } from "date-fns";
-import LinkifyPassage from "./_components/LinkifyPassage";
+import LinkifyPassage from "../../../../components/LinkifyPassage";
 
 type Props = {
   params: { id: string };

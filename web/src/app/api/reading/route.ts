@@ -8,8 +8,8 @@ import { streamObject } from "ai";
 import { privateEnv } from "@/lib/validators/env";
 import { Message } from "@/lib/types/message";
 import { questionTypesDesciprtion } from "@/lib/constants/questionTypes";
-import { db } from "@/db";
-import { readingQuestionTypesTable, readingGenResultTable } from "@/db/schema";
+// import { db } from "@/db";
+// import { readingQuestionTypesTable, readingGenResultTable } from "@/db/schema";
 
 export const maxDuration = 60;
 
@@ -191,7 +191,6 @@ function getPrompt(
   const randomAnswers = Array.from({ length: numQuestions }, () =>
     Math.floor(Math.random() * numOptions)
   );
-  console.log("randomAnswers", randomAnswers);
 
   return `
   Please generate a reading comprehension questions with the following requirement:

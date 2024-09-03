@@ -1,30 +1,36 @@
 "use client";
-import { useState, useRef } from "react";
 import { ListeningForm } from "./_components/ListeningForm";
 import { Separator } from "@/components/ui/separator";
-import GenerationResult from "../../_components/GenerationResult";
-import SavedTestForm from "../../_components/SaveTestForm";
+import { experimental_useObject as useObject } from "ai/react";
+import GenResult from "../../_components/GenResult";
+import { listeningCompResultSchema } from "@/lib/validators/genQA";
+import { useState } from "react";
 
 export default function ListeningPage() {
-  const [streaming, setStreaming] = useState<boolean>(false);
-  const [result, setResult] = useState<string>("");
-  const resultRef = useRef<HTMLDivElement | null>(null);
+  const [url, setUrl] = useState("");
+  const { submit, isLoading, object } = useObject({
+    api: "/api/listening",
+    schema: listeningCompResultSchema,
+    onFinish({ object }) {
+      console.log("onFinish", object);
+    },
+  });
 
   return (
     <div className="w-full max-w-3xl space-y-4 mx-auto">
-      <ListeningForm
-        streaming={streaming}
-        setStreaming={setStreaming}
-        resultRef={resultRef}
-        setResult={setResult}
-      />
+      <ListeningForm submit={submit} isLoading={isLoading} setUrl={setUrl} />
       <Separator className="max-w-3xl w-full mt-10" />
-      <GenerationResult
+      {/* <GenerationResult
         streaming={streaming}
         result={result}
         resultRef={resultRef}
       />
-      <SavedTestForm />
+      <SavedTestForm /> */}
+      <GenResult
+        passage={`Please watch the video and answer the questions below: ${url}`}
+        questions={object?.questions}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
