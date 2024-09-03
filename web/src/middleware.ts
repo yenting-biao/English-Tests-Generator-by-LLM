@@ -7,10 +7,20 @@ export async function middleware(request: NextRequest) {
 
   // frontend admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
+    if (request.nextUrl.pathname === "/admin/login") {
+      return NextResponse.next();
+    }
+
+    // this is to prevent the event that after logging in, the user is still shown the login page
+    const url = request.nextUrl.clone();
     if (!session) {
-      return NextResponse.rewrite(new URL("/admin/login", request.url));
+      url.pathname = "/admin/login";
+      return NextResponse.redirect(url);
+      //return NextResponse.rewrite(new URL("/admin/login", request.url));
     } else if (session?.user.username !== privateEnv.ADMIN_USERNAME) {
-      return NextResponse.rewrite(new URL("/student", request.url));
+      url.pathname = "/student";
+      return NextResponse.redirect(url);
+      // return NextResponse.rewrite(new URL("/student", request.url));
     }
   }
   // frontend student routes
@@ -40,6 +50,8 @@ export async function middleware(request: NextRequest) {
   else if (!session || !session.user) {
     return NextResponse.rewrite(new URL("/student/login", request.url));
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
