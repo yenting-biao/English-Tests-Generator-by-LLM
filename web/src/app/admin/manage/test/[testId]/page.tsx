@@ -46,7 +46,7 @@ export default async function TestsDetailPage({ params: { testId } }: Props) {
       <Accordion
         type="single"
         collapsible
-        //defaultValue="test-details"
+        defaultValue="assigned-classes"
         className="w-full"
       >
         <AccordionItem value="test-details">
