@@ -72,7 +72,7 @@ export default function AddClassForm({
       return;
     }
 
-    const res = await fetch("/api/tests/class", {
+    const res = await fetch("/api/admin/tests/class", {
       method: assignedCls ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...values, testId }),

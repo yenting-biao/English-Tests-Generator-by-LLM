@@ -9,7 +9,7 @@ import { useState } from "react";
 export default function ListeningPage() {
   const [url, setUrl] = useState("");
   const { submit, isLoading, object } = useObject({
-    api: "/api/listening",
+    api: "/api/admin/generation/listening",
     schema: listeningCompResultSchema,
     onFinish({ object }) {
       console.log("onFinish", object);

@@ -53,7 +53,7 @@ export function ClozeForm({
     setStreaming(true);
 
     try {
-      const res = await fetch("/api/cloze", {
+      const res = await fetch("/api/admin/generation/cloze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

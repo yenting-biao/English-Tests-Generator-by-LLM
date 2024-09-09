@@ -134,7 +134,7 @@ function ClassRow({
         return;
       }
 
-      const res = await fetch("/api/tests/class", {
+      const res = await fetch("/api/admin/tests/class", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ function ClassRow({
         "Are you sure you want to remove this class from the test?"
       )
     ) {
-      const res = await fetch("/api/tests/class", {
+      const res = await fetch("/api/admin/tests/class", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

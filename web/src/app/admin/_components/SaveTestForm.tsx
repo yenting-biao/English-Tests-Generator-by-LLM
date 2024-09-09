@@ -67,14 +67,14 @@ export default function SavedTestForm({
 
   const onSubmit = async (values: z.infer<typeof readingCompSchema>) => {
     const res = testId
-      ? await fetch(`/api/tests/${testId}`, {
+      ? await fetch(`/api/admin/tests/${testId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(values),
         })
-      : await fetch("/api/tests", {
+      : await fetch("/api/admin/tests", {
           method: testId ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",

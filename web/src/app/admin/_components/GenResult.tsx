@@ -219,14 +219,14 @@ function SubmitDialog({
   const onSubmit = async () => {
     try {
       const res = isEdit
-        ? await fetch(`/api/tests/reading-comp/${testId}`, {
+        ? await fetch(`/api/admin/tests/reading-comp/${testId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(validatedValues),
           })
-        : await fetch("/api/tests/reading-comp", {
+        : await fetch("/api/admin/tests/reading-comp", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

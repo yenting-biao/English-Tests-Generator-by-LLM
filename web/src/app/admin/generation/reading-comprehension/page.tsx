@@ -8,7 +8,7 @@ import GenResult from "../../_components/GenResult";
 
 export default function Home() {
   const { submit, isLoading, object } = useObject({
-    api: "/api/reading",
+    api: "/api/admin/generation/reading",
     schema: readingCompResultSchema,
     onFinish({ object }) {
       console.log("onFinish", object);

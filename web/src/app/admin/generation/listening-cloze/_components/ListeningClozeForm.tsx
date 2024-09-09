@@ -86,7 +86,7 @@ export function ListeningClozeForm({
     setStreaming(true);
 
     try {
-      const res = await fetch("/api/listening-cloze", {
+      const res = await fetch("/api/admin/generation/listening-cloze", {
         method: "POST",
         body: formData,
       });
