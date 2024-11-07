@@ -37,7 +37,7 @@ export default async function Home() {
         <StyledLink href="/admin/manage/test">
           Manage Saved Tests and Publish to Class
         </StyledLink>
-        <StyledLink href="/admin/manage/class">
+        <StyledLink href="/admin/manage/class" disabled>
           Examine Class Details (coming soon)
         </StyledLink>
       </div>
