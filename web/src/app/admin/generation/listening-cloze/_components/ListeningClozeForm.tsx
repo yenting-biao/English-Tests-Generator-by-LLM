@@ -48,7 +48,7 @@ export function ListeningClozeForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // The form values are type-safe and validated.
-    console.log(values);
+    // console.log(values);
     if (
       (values.transcript === "" || values.transcript === undefined) &&
       values.audioFile === undefined
@@ -210,7 +210,7 @@ function AudioFileField({
     <FormField
       control={form.control}
       name="audioFile"
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       render={({ field: { value, onChange, ...fieldProps } }) => (
         <FormItem>
           <FormLabel>
@@ -224,7 +224,7 @@ function AudioFileField({
               accept="audio/*"
               onChange={(event) => {
                 onChange(event.target.files && event.target.files[0]);
-                console.log(event.target.files);
+                // console.log(event.target.files);
               }}
             />
           </FormControl>

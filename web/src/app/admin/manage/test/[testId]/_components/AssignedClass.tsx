@@ -179,7 +179,7 @@ function ClassRow({
         }),
       });
       if (!res.ok) {
-        console.log("Failed to delete");
+        // console.log("Failed to delete");
         toast({
           variant: "destructive",
           title: "Error",

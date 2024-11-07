@@ -7,12 +7,12 @@ import { experimental_useObject as useObject } from "ai/react";
 import GenResult from "../../_components/GenResult";
 
 export default function Home() {
-  const { submit, isLoading, object } = useObject({
+  const { submit, isLoading, object, stop } = useObject({
     api: "/api/admin/generation/reading",
     schema: readingCompResultSchema,
-    onFinish({ object }) {
-      console.log("onFinish", object);
-    },
+    // onFinish({ object }) {
+    //   console.log("onFinish", object);
+    // },
   });
 
   return (
@@ -23,6 +23,7 @@ export default function Home() {
         passage={object?.passage}
         questions={object?.questions}
         isLoading={isLoading}
+        onStop={stop}
       />
     </div>
   );

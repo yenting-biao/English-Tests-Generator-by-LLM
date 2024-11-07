@@ -8,12 +8,12 @@ import { useState } from "react";
 
 export default function ListeningPage() {
   const [url, setUrl] = useState("");
-  const { submit, isLoading, object } = useObject({
+  const { submit, isLoading, object, stop } = useObject({
     api: "/api/admin/generation/listening",
     schema: listeningCompResultSchema,
-    onFinish({ object }) {
-      console.log("onFinish", object);
-    },
+    // onFinish({ object }) {
+    //   console.log("onFinish", object);
+    // },
   });
 
   return (
@@ -30,6 +30,7 @@ export default function ListeningPage() {
         passage={`Please watch the video and answer the questions below: ${url}`}
         questions={object?.questions}
         isLoading={isLoading}
+        onStop={stop}
       />
     </div>
   );

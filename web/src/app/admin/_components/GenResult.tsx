@@ -56,6 +56,10 @@ const defaultTitle: {
   "listening-cloze": "Listening Cloze",
 };
 
+const isScrolledToBottom = (element: HTMLElement) => {
+  return element.scrollHeight - element.scrollTop - element.clientHeight < 50;
+};
+
 export default function GenResult({
   testId,
   title,
@@ -64,12 +68,14 @@ export default function GenResult({
   isLoading,
   isEdit = false,
   setEditing,
+  onStop,
 }: DeepPartial<ReadingCompResult> & {
   testId?: string;
   isLoading: boolean;
   title?: string;
   isEdit?: boolean;
   setEditing?: React.Dispatch<React.SetStateAction<boolean>>;
+  onStop?: () => void;
 }) {
   if (isEdit && !setEditing) {
     throw new Error("setEdit is required when isEdit is true");
@@ -95,16 +101,21 @@ export default function GenResult({
   }, [passage, questions]);
 
   const passageRef = useRef<HTMLTextAreaElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
   useEffect(() => {
     if (passageRef.current && isLoading) {
-      passageRef.current.scrollTop = passageRef.current.scrollHeight;
+      if (isScrolledToBottom(passageRef.current)) {
+        passageRef.current.scrollTop = passageRef.current.scrollHeight;
+      }
     }
   }, [passage]);
 
-  const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (formRef.current && isLoading) {
-      formRef.current.scrollIntoView({ behavior: "auto" });
+      if (isScrolledToBottom(formRef.current)) {
+        formRef.current.scrollIntoView({ behavior: "auto" });
+      }
     }
   }, [passage]);
 
@@ -122,9 +133,11 @@ export default function GenResult({
   return (
     <div className="space-y-2">
       {!isEdit && (
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight py-6">
-          The Generated Test:
-        </h3>
+        <div className="flex justify-between items-center py-6">
+          <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+            The Generated Test:
+          </h3>
+        </div>
       )}
       <Form {...form}>
         <form
@@ -170,10 +183,12 @@ export default function GenResult({
             )}
           />
           {/* <div ref={passageScrollRef} /> */}
-          <QuestionsField form={form} isLoading={isLoading} />
-          <Button type="submit" className="w-fit mt-5">
-            {isEdit ? "Update the test" : "Save the test to library"}
-          </Button>
+          <QuestionsField form={form} isLoading={isLoading} onStop={onStop} />
+          <div className="space-x-5">
+            <Button type="submit" className="w-fit mt-5">
+              {isEdit ? "Update the test" : "Save the test to library"}
+            </Button>
+          </div>
           <SubmitDialog
             isOpen={showDialog}
             setOpen={setShowDialog}
@@ -350,9 +365,11 @@ function SubmitDialog({
 function QuestionsField({
   form,
   isLoading,
+  onStop,
 }: {
   form: UseFormReturn<z.infer<typeof saveReadingCompResultSchema>>;
   isLoading: boolean;
+  onStop?: () => void;
 }) {
   const {
     fields: questionFields,
@@ -364,9 +381,12 @@ function QuestionsField({
   });
 
   const qRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (qRef.current && isLoading) {
-      qRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+      if (isScrolledToBottom(qRef.current)) {
+        qRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+      }
     }
   }, [questionFields, form]);
 
@@ -426,6 +446,17 @@ function QuestionsField({
             Add Question
           </Button>
         </div>
+        {isLoading && onStop && (
+          <div className="w-full flex justify-center mt-5">
+            <Button
+              variant="outline"
+              onClick={onStop}
+              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+            >
+              Stop Generation
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

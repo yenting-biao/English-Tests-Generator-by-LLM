@@ -178,7 +178,7 @@ function AnswersField({
               name={`answers.${answerIndex}.ans`}
               render={() => {
                 const currentValue = form.watch(`answers.${answerIndex}.ans`);
-                console.log("currentValue", currentValue);
+                // console.log("currentValue", currentValue);
                 return (
                   <FormItem>
                     <div className="flex items-center gap-2">

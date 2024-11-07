@@ -119,10 +119,10 @@ export async function POST(req: NextRequest) {
           );
           return;
         } else {
-          console.log(
-            "Success in generating reading comprehension questions:",
-            param.object
-          );
+          // console.log(
+          //   "Success in generating reading comprehension questions:",
+          //   param.object
+          // );
           if (!param.object) {
             console.error("No object returned from the model");
             return;
